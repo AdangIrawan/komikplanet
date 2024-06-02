@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
       ),
       body: const Center(
-        child: Text('Welcome to Comic Planet Boss!'),
+        child: Text('Welcome to Comic Planet Adik adik!'),
       ),
     );
   }
