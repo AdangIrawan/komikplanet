@@ -165,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: 'and '),
+                    TextSpan(text: '\nand '),
                     TextSpan(
                       text: 'Privacy Policy',
                       style: TextStyle(
