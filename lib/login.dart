@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import 'regis.dart';
+import 'home.dart';
 
-class SignUpPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> {
   final FocusNode _usernameFocusNode = FocusNode();
-  final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
     _usernameFocusNode.dispose();
-    _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
   }
@@ -32,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Image.asset('assets/image/KomikPlanetLogo.png', height: 150),
               const SizedBox(height: 20),
               const Text(
-                'Create your Account',
+                'Login to your Account',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
@@ -46,18 +47,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   filled: true,
                   fillColor: Colors.white,
                   hintText: 'username',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                focusNode: _emailFocusNode,
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: 'email',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
@@ -79,23 +68,25 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Logika pendaftaran
+                  // Logika login
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15), // Ubah padding vertikal saja
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 child: SizedBox(
                   width: double.infinity,
                   child: Center(
                     child: const Text(
-                      'Sign Up',
+                      'Sign In',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -135,16 +126,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    "Have Account ? ",
+                    "Don't have an account ? ",
                     style: TextStyle(color: Colors.white),
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigasi ke halaman login
-                      Navigator.pop(context);
+                      // Navigasi ke halaman pendaftaran
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                      );
                     },
                     child: const Text(
-                      'Login',
+                      'Sign Up',
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
