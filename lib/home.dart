@@ -7,8 +7,17 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Comic Planet'),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/image/KomikPlanetLogo.png'), // Sesuaikan path gambar logo Anda
+        ),
         actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // Handle search button press
+            },
+          ),
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
@@ -16,6 +25,7 @@ class HomePage extends StatelessWidget {
             },
           ),
         ],
+        backgroundColor: Color.fromARGB(255, 17, 0, 58),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -30,7 +40,7 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage('assets/image/KomikPlanetLogo.png'), // Replace with your asset image
+                    image: AssetImage('assets/image/KomikPlanetLogo.png'), // Ganti dengan path gambar Anda
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -142,9 +152,9 @@ const List<Comic> comics = [
   Comic('assets/image/Komik1.png', 'Doraemon', 'Fantasy', 8.5, 'Doraemon is a Japanese manga series written and illustrated by Fujiko F. Fujio. The series has also been adapted into a successful anime series and media franchise.'),
   Comic('assets/image/Komik2.png', 'Boku No Hiro', 'Action', 9.0, 'Boku No Hero Academia, also known as My Hero Academia, is a Japanese superhero manga series written and illustrated by Kohei Horikoshi.'),
   Comic('assets/image/KomikPlanetLogo.png', 'Gimai Seikatsu', 'Romance', 8.0, 'Gimai Seikatsu is a Japanese manga series that revolves around a romantic story between the main characters.'),
-  Comic('assets/image/comic4.png', 'Comic Title 4', 'Comedy', 7.5, 'Description of Comic Title 4. This section can be filled with detailed information about the comic.'),
-  Comic('assets/image/comic5.png', 'Comic Title 5', 'Comedy', 7.5, 'Description of Comic Title 5. This section can be filled with detailed information about the comic.'),
-  Comic('assets/image/comic6.png', 'Comic Title 6', 'Comedy', 7.5, 'Description of Comic Title 6. This section can be filled with detailed information about the comic.'),
+  Comic('assets/image/Komik1.png', 'Comic Title 4', 'Comedy', 7.5, 'Description of Comic Title 4. This section can be filled with detailed information about the comic.'),
+  Comic('assets/image/Komik1.png', 'Comic Title 5', 'Comedy', 7.5, 'Description of Comic Title 5. This section can be filled with detailed information about the comic.'),
+  Comic('assets/image/Komik2.png', 'Comic Title 6', 'Comedy', 7.5, 'Description of Comic Title 6. This section can be filled with detailed information about the comic.'),
 ];
 
 class Comic {

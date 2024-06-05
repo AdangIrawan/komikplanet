@@ -11,8 +11,7 @@ class SignUpPage extends StatelessWidget {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: _emailController.text,
-              password: _passwordController.text);
+              email: _emailController.text, password: _passwordController.text);
 
       // Jika pendaftaran berhasil, navigasi ke halaman login
       Navigator.pushReplacement(
