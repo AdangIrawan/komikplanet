@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
-import 'regis.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
+import 'regis.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final FocusNode _usernameFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-
-  @override
-  void dispose() {
-    _usernameFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
-  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +31,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                focusNode: _usernameFocusNode,
+                controller: _usernameController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
-                  hintText: 'username',
+                  hintText: 'email',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
@@ -54,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                focusNode: _passwordFocusNode,
+                controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   filled: true,
@@ -67,17 +56,49 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Logika login
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                onPressed: () async {
+                  try {
+                    final String email = _usernameController.text;
+                    final String password = _passwordController.text;
+
+                    // Authenticate user with email and password
+                    final UserCredential userCredential =
+                        await _auth.signInWithEmailAndPassword(
+                      email: email,
+                      password: password,
+                    );
+
+                    // Check if user exists and navigate to home page
+                    if (userCredential.user != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    }
+                  } catch (e) {
+                    // Handle login errors
+                    print('Error during login: $e');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Login Failed"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15), // Ubah padding vertikal saja
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
