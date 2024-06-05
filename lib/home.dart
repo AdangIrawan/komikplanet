@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
             },
           ),
         ],
-        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -41,11 +41,11 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage('assets/image/KomikPlanetLogo.png'), // Ganti dengan path gambar Anda
+                    image: AssetImage('assets/image/banner1.png'), // Path Banner 1
                     fit: BoxFit.cover,
                   ),
                 ),
-                child: Stack(
+                child:const Stack(
                   children: [
                     Positioned(
                       bottom: 10,
@@ -63,9 +63,8 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-
               // Category
-              Text(
+              const Text(
                 'Category',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -87,15 +86,15 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 20),
 
               // Recommendations
-              Text(
+              const Text(
                 'Rekomendasi',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               GridView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 0.6,
                   crossAxisSpacing: 10,
@@ -111,7 +110,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35), //color fix 
         unselectedItemColor: Colors.grey, // Set color for unselected items
         selectedItemColor: Colors.white, // Set color for selected items
         type: BottomNavigationBarType.fixed, // Ensure the background is applied to all items
