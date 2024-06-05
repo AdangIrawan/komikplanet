@@ -1,49 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login.dart';
+import 'home.dart';
+import 'regis.dart';
 
-class SignUpPage extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _register(BuildContext context) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text);
-
-      // Jika pendaftaran berhasil, navigasi ke halaman login
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
-    } on FirebaseAuthException catch (e) {
-      // Tangani kesalahan yang mungkin terjadi selama pendaftaran
-      print('Error during registration: $e');
-
-      // Tampilkan pesan kesalahan kepada pengguna
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Registration Failed"),
-            content: Text("${e.message}"),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    } catch (e) {
-      print('Unexpected error during registration: $e');
-    }
-  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +22,7 @@ class SignUpPage extends StatelessWidget {
               Image.asset('assets/image/KomikPlanetLogo.png', height: 150),
               const SizedBox(height: 20),
               const Text(
-                'Create your Account',
+                'Login to your Account',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
@@ -68,18 +32,6 @@ class SignUpPage extends StatelessWidget {
               const SizedBox(height: 20),
               TextField(
                 controller: _usernameController,
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: 'username',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _emailController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -104,7 +56,46 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () => _register(context),
+                onPressed: () async {
+                  try {
+                    final String email = _usernameController.text;
+                    final String password = _passwordController.text;
+
+                    // Authenticate user with email and password
+                    final UserCredential userCredential =
+                        await _auth.signInWithEmailAndPassword(
+                      email: email,
+                      password: password,
+                    );
+
+                    // Check if user exists and navigate to home page
+                    if (userCredential.user != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    }
+                  } catch (e) {
+                    // Handle login errors
+                    print('Error during login: $e');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Login Failed"),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
                   padding: const EdgeInsets.symmetric(vertical: 15),
@@ -116,7 +107,7 @@ class SignUpPage extends StatelessWidget {
                   width: double.infinity,
                   child: Center(
                     child: const Text(
-                      'Sign Up',
+                      'Sign In',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -156,15 +147,19 @@ class SignUpPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    "Have Account ? ",
+                    "Don't have an account ? ",
                     style: TextStyle(color: Colors.white),
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigasi ke halaman pendaftaran
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                      );
                     },
                     child: const Text(
-                      'Login',
+                      'Sign Up',
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),

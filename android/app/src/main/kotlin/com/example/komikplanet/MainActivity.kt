@@ -1,4 +1,4 @@
-package com.example.komikplanet
+package com.kp.a
 
 import io.flutter.embedding.android.FlutterActivity
 
