@@ -150,13 +150,14 @@ const List<String> categories = [
 ];
 
 const List<Comic> comics = [
-  Comic('assets/image/Komik1.png', 'Doraemon', 'Fantasy', 8.5, 'Doraemon is a Japanese manga series written and illustrated by Fujiko F. Fujio. The series has also been adapted into a successful anime series and media franchise.'),
-  Comic('assets/image/Komik2.png', 'Boku No Hiro', 'Action', 9.0, 'Boku No Hero Academia, also known as My Hero Academia, is a Japanese superhero manga series written and illustrated by Kohei Horikoshi.'),
-  Comic('assets/image/KomikPlanetLogo.png', 'Gimai Seikatsu', 'Romance', 8.0, 'Gimai Seikatsu is a Japanese manga series that revolves around a romantic story between the main characters.'),
-  Comic('assets/image/Komik1.png', 'Comic Title 4', 'Comedy', 7.5, 'Description of Comic Title 4. This section can be filled with detailed information about the comic.'),
-  Comic('assets/image/Komik1.png', 'Comic Title 5', 'Comedy', 7.5, 'Description of Comic Title 5. This section can be filled with detailed information about the comic.'),
-  Comic('assets/image/Komik2.png', 'Comic Title 6', 'Comedy', 7.5, 'Description of Comic Title 6. This section can be filled with detailed information about the comic.'),
+  Comic('assets/image/Komik1.png', 'Doraemon', 'Fantasy', 8.5, 'Doraemon is a Japanese manga series written and illustrated by Fujiko F. Fujio. The series has also been adapted into a successful anime series and media franchise.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
+  Comic('assets/image/Komik2.png', 'Boku No Hiro', 'Action', 9.0, 'Boku No Hero Academia, also known as My Hero Academia, is a Japanese superhero manga series written and illustrated by Kohei Horikoshi.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
+  Comic('assets/image/KomikPlanetLogo.png', 'Gimai Seikatsu', 'Romance', 8.0, 'Gimai Seikatsu is a Japanese manga series that revolves around a romantic story between the main characters.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
+  Comic('assets/image/Komik1.png', 'Comic Title 4', 'Comedy', 7.5, 'Description of Comic Title 4. This section can be filled with detailed information about the comic.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
+  Comic('assets/image/Komik1.png', 'Comic Title 5', 'Comedy', 7.5, 'Description of Comic Title 5. This section can be filled with detailed information about the comic.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
+  Comic('assets/image/Komik2.png', 'Comic Title 6', 'Comedy', 7.5, 'Description of Comic Title 6. This section can be filled with detailed information about the comic.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
 ];
+
 
 class Comic {
   final String imagePath;
@@ -164,9 +165,11 @@ class Comic {
   final String genre;
   final double rating;
   final String description;
+  final List<String> chapters;
 
-  const Comic(this.imagePath, this.title, this.genre, this.rating, this.description);
+  const Comic(this.imagePath, this.title, this.genre, this.rating, this.description, this.chapters);
 }
+
 
 class CategoryButton extends StatelessWidget {
   final String label;
@@ -247,6 +250,77 @@ class ComicCard extends StatelessWidget {
   }
 }
 
+class ComicDetailPage extends StatelessWidget {
+  final Comic comic;
+
+  const ComicDetailPage({Key? key, required this.comic}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(comic.title),
+        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: AssetImage(comic.imagePath),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              comic.title,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Genre: ${comic.genre}',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Rating: ${comic.rating}',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            Text(
+              comic.description,
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Chapters',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: comic.chapters.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(comic.chapters[index]),
+                  onTap: () {
+                    // Handle chapter tap
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 void main() {
   runApp(MaterialApp(
