@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komikplanet/Admin_Dasboard/splash_admin.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset('assets/image/KomikPlanetLogo.png'), // Sesuaikan path gambar logo Anda
+          child: Image.asset('assets/image/KomikPlanetLogo.png'), // Sesuaikan path gambar logo 
         ),
         actions: [
           IconButton(
@@ -21,6 +22,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ())
+              //   );
               // Handle settings button press
             },
           ),
