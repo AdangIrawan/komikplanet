@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:komikplanet/Admin_Dasboard/splash_admin.dart';
+import 'package:komikplanet/settings.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,10 +23,6 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => ())
-              //   );
               // Handle settings button press
             },
           ),
