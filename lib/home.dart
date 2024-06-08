@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'DetailKomik.dart';
+import 'Komik.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset('assets/image/KomikPlanetLogo.png'), // Sesuaikan path gambar logo Anda
+          child: Image.asset('assets/image/KomikPlanetLogo.png'),
         ),
         actions: [
           IconButton(
@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage('assets/image/banner1.png'), // Path Banner 1
+                    image: AssetImage('assets/image/KomikPlanetLogo.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -137,39 +137,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-const List<String> categories = [
-  'Fantasy',
-  'Action',
-  'Romance',
-  'Comedy',
-  'Horror',
-  'Sci-Fi',
-  'Drama',
-  'Adventure',
-];
-
-const List<Comic> comics = [
-  Comic('assets/image/Komik1.png', 'Doraemon', 'Fantasy', 8.5, 'Doraemon is a Japanese manga series written and illustrated by Fujiko F. Fujio. The series has also been adapted into a successful anime series and media franchise.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
-  Comic('assets/image/Komik2.png', 'Boku No Hiro', 'Action', 9.0, 'Boku No Hero Academia, also known as My Hero Academia, is a Japanese superhero manga series written and illustrated by Kohei Horikoshi.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
-  Comic('assets/image/KomikPlanetLogo.png', 'Gimai Seikatsu', 'Romance', 8.0, 'Gimai Seikatsu is a Japanese manga series that revolves around a romantic story between the main characters.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
-  Comic('assets/image/Komik1.png', 'Comic Title 4', 'Comedy', 7.5, 'Description of Comic Title 4. This section can be filled with detailed information about the comic.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
-  Comic('assets/image/Komik1.png', 'Comic Title 5', 'Comedy', 7.5, 'Description of Comic Title 5. This section can be filled with detailed information about the comic.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
-  Comic('assets/image/Komik2.png', 'Comic Title 6', 'Comedy', 7.5, 'Description of Comic Title 6. This section can be filled with detailed information about the comic.', ['Chapter 1', 'Chapter 2', 'Chapter 3']),
-];
-
-
-class Comic {
-  final String imagePath;
-  final String title;
-  final String genre;
-  final double rating;
-  final String description;
-  final List<String> chapters;
-
-  const Comic(this.imagePath, this.title, this.genre, this.rating, this.description, this.chapters);
-}
-
-
 class CategoryButton extends StatelessWidget {
   final String label;
 
@@ -249,16 +216,23 @@ class ComicCard extends StatelessWidget {
   }
 }
 
-class ComicDetailPage extends StatelessWidget {
+class ComicDetailPage extends StatefulWidget {
   final Comic comic;
 
   const ComicDetailPage({Key? key, required this.comic}) : super(key: key);
 
   @override
+  _ComicDetailPageState createState() => _ComicDetailPageState();
+}
+
+class _ComicDetailPageState extends State<ComicDetailPage> {
+  String selectedTab = 'Description';
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(comic.title),
+        title: Text(widget.comic.title),
         backgroundColor: Color.fromARGB(255, 17, 0, 58),
       ),
       body: SingleChildScrollView(
@@ -271,31 +245,72 @@ class ComicDetailPage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: AssetImage(comic.imagePath),
+                  image: AssetImage(widget.comic.imagePath),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             SizedBox(height: 10),
             Text(
-              comic.title,
+              widget.comic.title,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Text(
-              'Genre: ${comic.genre}',
+              'Genre: ${widget.comic.genre}',
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 10),
             Text(
-              'Rating: ${comic.rating}',
+              'Rating: ${widget.comic.rating}',
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 10),
-            Text(
-              comic.description,
-              style: TextStyle(fontSize: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedTab = 'Description';
+                    });
+                  },
+                  child: Text('Description'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedTab = 'Synopsis';
+                    });
+                  },
+                  child: Text('Synopsis'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedTab = 'Status Manga';
+                    });
+                  },
+                  child: Text('Status Manga'),
+                ),
+              ],
             ),
+            SizedBox(height: 10),
+            if (selectedTab == 'Description')
+              Text(
+                widget.comic.description,
+                style: TextStyle(fontSize: 16),
+              ),
+            if (selectedTab == 'Synopsis')
+              Text(
+                widget.comic.synopsis,
+                style: TextStyle(fontSize: 16),
+              ),
+            if (selectedTab == 'Status Manga')
+              Text(
+                widget.comic.status,
+                style: TextStyle(fontSize: 16),
+              ),
             SizedBox(height: 20),
             Text(
               'Chapters',
@@ -304,18 +319,59 @@ class ComicDetailPage extends StatelessWidget {
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: comic.chapters.length,
+              itemCount: widget.comic.chapters.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(comic.chapters[index]),
+                  title: Text(widget.comic.chapters[index].title),
                   onTap: () {
-                    // Handle chapter tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChapterDetailPage(
+                          title: widget.comic.title,
+                          chapter: widget.comic.chapters[index].title,
+                          images: widget.comic.chapters[index].images,
+                        ),
+                      ),
+                    );
                   },
                 );
               },
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ChapterDetailPage extends StatelessWidget {
+  final String title;
+  final String chapter;
+  final List<String> images;
+
+  const ChapterDetailPage({
+    Key? key,
+    required this.title,
+    required this.chapter,
+    required this.images,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$title - $chapter'),
+        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+      ),
+      body: PageView.builder(
+        itemCount: images.length, // Update with the actual number of images
+        itemBuilder: (context, index) {
+          return Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(images[index], fit: BoxFit.contain), // Use the actual image paths
+          );
+        },
       ),
     );
   }
