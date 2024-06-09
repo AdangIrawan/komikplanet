@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Komik.dart';
 import 'booklish.dart';
+import 'search.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,7 +18,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              // Handle search button press
+              showSearch(
+                context: context,
+                delegate: ComicSearchDelegate(),
+              );
             },
           ),
           IconButton(
@@ -46,7 +50,7 @@ class HomePage extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                child:const Stack(
+                child: const Stack(
                   children: [
                     Positioned(
                       bottom: 10,
@@ -133,7 +137,7 @@ class HomePage extends StatelessWidget {
             label: 'Profile',
           ),
         ],
-          onTap: (int index) {
+        onTap: (int index) {
           // Handle bottom navigation bar taps
           if (index == 1) {
             // Jika ikon "Library" diklik, navigasi ke BookmarkPage
