@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:komikplanet/main.dart'; // import halaman utama
 import 'package:komikplanet/settings.dart'; //settings page
 
 class AdminSplash extends StatelessWidget {
