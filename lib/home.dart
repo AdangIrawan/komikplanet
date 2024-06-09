@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Komik.dart';
 import 'booklish.dart';
+import 'search.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,7 +18,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              // Handle search button press
+              showSearch(
+                context: context,
+                delegate: ComicSearchDelegate(),
+              );
             },
           ),
           IconButton(
