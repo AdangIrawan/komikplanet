@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Komik.dart';
+import 'booklish.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -121,7 +122,7 @@ class HomePage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'Library',
+            label: 'Bookmark',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
@@ -132,6 +133,16 @@ class HomePage extends StatelessWidget {
             label: 'Profile',
           ),
         ],
+          onTap: (int index) {
+          // Handle bottom navigation bar taps
+          if (index == 1) {
+            // Jika ikon "Library" diklik, navigasi ke BookmarkPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BookmarkPage()),
+            );
+          }
+        }
       ),
     );
   }
@@ -264,6 +275,10 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
             Text(
               'Rating: ${widget.comic.rating}',
               style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Bookmark',
             ),
             SizedBox(height: 10),
             Row(
