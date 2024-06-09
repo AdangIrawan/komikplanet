@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Komik.dart';
 import 'booklish.dart';
 import 'search.dart';
@@ -116,39 +117,40 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color.fromARGB(255, 11, 1, 35), //color fix
-          unselectedItemColor: Colors.grey, // Set color for unselected items
-          selectedItemColor: Colors.white, // Set color for selected items
-          type: BottomNavigationBarType
-              .fixed, // Ensure the background is applied to all items
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              label: 'Bookmark',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              label: 'Notifications',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          onTap: (int index) {
-            // Handle bottom navigation bar taps
-            if (index == 1) {
-              // Jika ikon "Library" diklik, navigasi ke BookmarkPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BookmarkPage()),
-              );
-            }
-          }),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35), //color fix
+        unselectedItemColor: Colors.grey, // Set color for unselected items
+        selectedItemColor: Colors.white, // Set color for selected items
+        type: BottomNavigationBarType
+            .fixed, // Ensure the background is applied to all items
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Bookmark',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        onTap: (int index) {
+          // Handle bottom navigation bar taps
+          if (index == 1) {
+            // Jika ikon "Library" diklik, navigasi ke BookmarkPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BookmarkPage()),
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -233,39 +235,6 @@ class ComicCard extends StatelessWidget {
   }
 }
 
-class BookmarkPage extends StatelessWidget {
-  const BookmarkPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Bookmarks'),
-        backgroundColor: Color.fromARGB(255, 11, 1, 35),
-      ),
-      body: ListView.builder(
-        itemCount: Booklish.bookmarkedComics.length,
-        itemBuilder: (context, index) {
-          final Comic comic = Booklish.bookmarkedComics[index];
-          return ListTile(
-            title: Text(comic.title),
-            subtitle: Text(comic.genre),
-            onTap: () {
-              // Navigasi ke halaman detail komik saat item daftar diklik
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ComicDetailPage(comic: comic),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
 class ComicDetailPage extends StatefulWidget {
   final Comic comic;
 
@@ -274,14 +243,16 @@ class ComicDetailPage extends StatefulWidget {
   @override
   _ComicDetailPageState createState() => _ComicDetailPageState();
 }
-
 class _ComicDetailPageState extends State<ComicDetailPage> {
   String selectedTab = 'Description';
   bool isBookmarked = false;
+  String? userId;
 
   @override
   void initState() {
     super.initState();
+    // Dapatkan UID pengguna yang sedang masuk
+    userId = FirebaseAuth.instance.currentUser?.uid;
     // Periksa apakah komik sudah di-bookmark saat halaman dimuat
     isBookmarked = Booklish.bookmarkedComics.contains(widget.comic);
   }
@@ -298,7 +269,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+             Container(
               height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -327,16 +298,17 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
             SizedBox(
               height: 50,
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   setState(() {
                     isBookmarked = !isBookmarked;
                   });
-                  // Handle bookmark action here
-                  if (isBookmarked) {
-                    Booklish.addBookmark(widget.comic); // Tambahkan ke bookmark
-                  } else {
-                    Booklish.removeBookmark(
-                        widget.comic); // Hapus dari bookmark
+                  // Periksa apakah pengguna sudah masuk dan dapatkan ID pengguna jika sudah
+                  if (userId != null) {
+                    if (isBookmarked) {
+                      await Booklish.addBookmark(userId!, widget.comic); // Tambahkan ke bookmark
+                    } else {
+                      await Booklish.removeBookmark(userId!, widget.comic); // Hapus dari bookmark
+                    }
                   }
                 },
                 child: Row(
@@ -344,7 +316,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   children: [
                     Icon(
                       isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: Colors.blue, // Change the color as needed
+                      color: Colors.blue, // Ganti warna sesuai kebutuhan
                     ),
                     SizedBox(width: 8),
                     Text(
