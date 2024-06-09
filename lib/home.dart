@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:komikplanet/Admin_Dasboard/splash_admin.dart';
 import 'package:komikplanet/settings.dart';
+import 'settings.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
