@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:komikplanet/settings/accountSettings.dart';
+import 'package:komikplanet/settings/nontification.dart';
+import 'package:komikplanet/settings/payment.dart';
+// Import halaman lainnya yang diperlukan
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -13,9 +17,6 @@ class SettingsPage extends StatelessWidget {
           },
         ),
         title: Text('Settings', style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          Icon(Icons.settings, color: Colors.white),
-        ],
       ),
       body: ListView(
         padding: EdgeInsets.all(20.0),
@@ -24,21 +25,30 @@ class SettingsPage extends StatelessWidget {
             icon: Icons.person,
             text: 'Account Settings',
             onTap: () {
-              // Navigasi ke halaman Account Settings
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountSettings()),
+              );
             },
           ),
           _buildSettingsItem(
             icon: Icons.notifications,
             text: 'Notification',
             onTap: () {
-              // Navigasi ke halaman Notification
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
             },
           ),
           _buildSettingsItem(
             icon: Icons.payment,
             text: 'Payment',
             onTap: () {
-              // Navigasi ke halaman Payment
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PaymentPage()),
+              );
             },
           ),
           _buildSettingsItem(
@@ -102,16 +112,20 @@ class SettingsPage extends StatelessWidget {
           ),
         ],
       ),
+
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 4,  // Index of the settings tab
-        items: [
+        backgroundColor: Color.fromARGB(255, 11, 1, 35), //color fix 
+        unselectedItemColor: Colors.grey, // Set color for unselected items
+        selectedItemColor: Colors.white, // Set color for selected items
+        type: BottomNavigationBarType.fixed, // Ensure the background is applied to all items
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Bookmarks',
+            icon: Icon(Icons.book),
+            label: 'Library',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
@@ -120,10 +134,6 @@ class SettingsPage extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
           ),
         ],
         onTap: (index) {

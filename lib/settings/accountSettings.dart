@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
+
+class AccountSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,98 +13,75 @@ class SettingsPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text('Settings', style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          Icon(Icons.settings, color: Colors.white),
-        ],
+        title: Text('Account Settings', style: TextStyle(color: Colors.white)),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(20.0),
-        children: <Widget>[
-          _buildSettingsItem(
-            icon: Icons.person,
-            text: 'Account Settings',
-            onTap: () {
-              // Navigasi ke halaman Account Settings
-            },
-          ),
-          _buildSettingsItem(
-            icon: Icons.notifications,
-            text: 'Notification',
-            onTap: () {
-              // Navigasi ke halaman Notification
-            },
-          ),
-          _buildSettingsItem(
-            icon: Icons.payment,
-            text: 'Payment',
-            onTap: () {
-              // Navigasi ke halaman Payment
-            },
-          ),
-          _buildSettingsItem(
-            icon: Icons.book,
-            text: 'BoksLish',
-            onTap: () {
-              // Navigasi ke halaman BoksLish
-            },
-          ),
-          _buildSettingsItem(
-            icon: Icons.brush,
-            text: 'Creator',
-            onTap: () {
-              // Navigasi ke halaman Creator
-            },
-          ),
-          _buildSettingsItem(
-            icon: Icons.lock,
-            text: 'Change password',
-            onTap: () {
-              // Navigasi ke halaman Change password
-            },
-          ),
-          _buildSettingsItem(
-            icon: Icons.delete,
-            text: 'Delete Account',
-            textColor: Colors.red,
-            backgroundColor: Colors.red.shade100,
-            onTap: () {
-              // Navigasi ke halaman Delete Account
-            },
-          ),
-          SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              // Logout action
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: NetworkImage('https://i.pinimg.com/564x/ec/b8/bc/ecb8bcd9abfa2d3426e2032b0c975e1d.jpg'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Tambahkan logika untuk mengubah gambar profil
+                    },
+                    child: Text(
+                      'Edit profile image',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Logout',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                  ),
-                ),
-                Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-              ],
+            SizedBox(height: 20),
+            _buildTextField(label: 'Username', initialValue: 'Ismail Bin Mail'),
+            SizedBox(height: 10),
+            _buildTextField(label: 'Email', initialValue: 'maillow@domain.com'),
+            SizedBox(height: 10),
+            _buildTextField(label: 'URLs', initialValue: 'mail_ganteng45.net'),
+            SizedBox(height: 10),
+            SizedBox(height: 10),
+            SizedBox(height: 10),
+            TextButton.icon(
+              onPressed: () {
+                // Tambahkan logika untuk menambahkan URL lain
+              },
+              icon: Icon(Icons.add, color: Colors.grey),
+              label: Text('Add another', style: TextStyle(color: Colors.grey)),
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            _buildTextField(
+              label: 'Bio',
+              initialValue: 'I am a designer based in your heart EAAK, making the best for you.',
+              maxLines: 3,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Tambahkan logika untuk menyimpan perubahan
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                backgroundColor: Colors.blueGrey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text(
+                'Save changes',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 4,  // Index of the settings tab
+        currentIndex: 4, // Index tab settings
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -133,25 +111,29 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsItem({
-    required IconData icon,
-    required String text,
-    Color textColor = Colors.black,
-    Color backgroundColor = Colors.white,
-    required Function onTap,
+  Widget _buildTextField({
+    required String label,
+    required String initialValue,
+    int maxLines = 1,
   }) {
-    return Card(
-      color: backgroundColor,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      child: ListTile(
-        leading: Icon(icon, color: textColor),
-        title: Text(
-          text,
-          style: TextStyle(color: textColor),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        trailing: Icon(Icons.arrow_forward_ios, color: textColor),
-        onTap: () => onTap(),
-      ),
+        TextField(
+          controller: TextEditingController(text: initialValue),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            isDense: true,
+          ),
+          maxLines: maxLines,
+        ),
+      ],
     );
   }
 }

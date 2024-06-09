@@ -24,6 +24,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
               // Handle settings button press
             },
           ),
@@ -46,23 +50,6 @@ class HomePage extends StatelessWidget {
                     image: AssetImage('assets/image/banner1.png'), // Path Banner 1
                     fit: BoxFit.cover,
                   ),
-                ),
-                child:const Stack(
-                  children: [
-                    Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: Text(
-                        'Dark Moon: Children of Vamfield\nwith ENHYPEN',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          backgroundColor: Colors.black54,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
               // Category
