@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Komik.dart';
 
 class BookmarkPage extends StatelessWidget {
   const BookmarkPage({Key? key}) : super(key: key);
@@ -17,5 +18,18 @@ class BookmarkPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+class Booklish {
+  static List<Comic> bookmarkedComics = [];
+
+  static void addBookmark(Comic comic) {
+    if (!bookmarkedComics.contains(comic)) {
+      bookmarkedComics.add(comic);
+    }
+  }
+
+  static void removeBookmark(Comic comic) {
+    bookmarkedComics.remove(comic);
   }
 }
