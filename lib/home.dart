@@ -240,7 +240,7 @@ class BookmarkPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bookmark'),
+        title: Text('Bookmarks'),
         backgroundColor: Color.fromARGB(255, 11, 1, 35),
       ),
       body: ListView.builder(
