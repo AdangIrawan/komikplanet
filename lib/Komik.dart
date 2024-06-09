@@ -15,6 +15,7 @@ const List<String> categories = [
 
 const List<Comic> comics = [
   Comic(
+    '1',
     'assets/image/Tumbnail1.png',
     'Tensei Kizoku no Isekai Boukenroku',
     'Fantasy',
@@ -58,6 +59,7 @@ const List<Comic> comics = [
     ],
   ),
   Comic(
+    '2',
     'assets/image/Komik2.png',
     'Boku No Hiro',
     'Action',
@@ -81,6 +83,7 @@ const List<Comic> comics = [
     ],
   ),
   Comic(
+    '3',
     'assets/image/KomikPlanetLogo.png',
     'Gimai Seikatsu',
     'Romance',
@@ -104,6 +107,7 @@ const List<Comic> comics = [
     ],
   ),
   Comic(
+    '4',
     'assets/image/Komik1.png',
     'Comic Title 4',
     'Comedy',
@@ -127,6 +131,7 @@ const List<Comic> comics = [
     ],
   ),
   Comic(
+    '5',
     'assets/image/Komik1.png',
     'Comic Title 5',
     'Comedy',
@@ -150,6 +155,7 @@ const List<Comic> comics = [
     ],
   ),
   Comic(
+    '6',
     'assets/image/Komik2.png',
     'Comic Title 6',
     'Comedy',
@@ -175,6 +181,7 @@ const List<Comic> comics = [
 ];
 
 class Comic {
+  final String id;
   final String imagePath;
   final String title;
   final String genre;
@@ -185,6 +192,7 @@ class Comic {
   final List<Chapter> chapters;
 
   const Comic(
+    this.id,
     this.imagePath,
     this.title,
     this.genre,
