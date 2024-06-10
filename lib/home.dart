@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Komik.dart';
@@ -40,34 +41,54 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Banner
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                height: 180.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: AssetImage('assets/image/KomikPlanetLogo.png'),
-                    fit: BoxFit.cover,
-                  ),
+              // Carousel Slider
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 180.0,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  aspectRatio: 2.0,
+                  onPageChanged: (index, reason) {
+                    // Handle page change if necessary
+                  },
                 ),
-                child: const Stack(
-                  children: [
-                    Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: Text(
-                        'Dark Moon: Children of Vamfield\nwith ENHYPEN',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          backgroundColor: Colors.black54,
+                items: [
+                  'assets/image/KomikPlanetLogo.png',
+                  'assets/image/Komik1.png',
+                  'assets/image/Komik2.png',
+                ].map((imagePath) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: AssetImage(imagePath),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
+                        child: const Stack(
+                          children: [
+                            Positioned(
+                              bottom: 10,
+                              left: 10,
+                              child: Text(
+                                'Dark Moon: Children of Vamfield\nwith ENHYPEN',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  backgroundColor: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
               ),
               // Category
               const Text(
