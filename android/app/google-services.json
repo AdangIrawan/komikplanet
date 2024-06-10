@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "867028664180",
+    "project_id": "komikplanet-646dc",
+    "storage_bucket": "komikplanet-646dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867028664180:android:768ef7549c536c923a7621",
+        "android_client_info": {
+          "package_name": "com.kp.a"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD82oft0EYtOeX1j5aeSO7QU4Iq1PS-45Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

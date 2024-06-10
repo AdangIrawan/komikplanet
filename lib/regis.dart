@@ -1,22 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
 
-class SignUpPage extends StatefulWidget {
-  @override
-  _SignUpPageState createState() => _SignUpPageState();
-}
+class SignUpPage extends StatelessWidget {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-class _SignUpPageState extends State<SignUpPage> {
-  final FocusNode _usernameFocusNode = FocusNode();
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
+  Future<void> _register(BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text, password: _passwordController.text);
 
-  @override
-  void dispose() {
-    _usernameFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
+      // Jika pendaftaran berhasil, navigasi ke halaman login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Tangani kesalahan yang mungkin terjadi selama pendaftaran
+      print('Error during registration: $e');
+
+      // Tampilkan pesan kesalahan kepada pengguna
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Registration Failed"),
+            content: Text("${e.message}"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print('Unexpected error during registration: $e');
+    }
   }
 
   @override
@@ -41,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                focusNode: _usernameFocusNode,
+                controller: _usernameController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -53,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                focusNode: _emailFocusNode,
+                controller: _emailController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -65,7 +91,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                focusNode: _passwordFocusNode,
+                controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   filled: true,
@@ -78,18 +104,13 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Logika pendaftaran
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
+                onPressed: () => _register(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 child: SizedBox(
                   width: double.infinity,
@@ -140,7 +161,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigasi ke halaman login
                       Navigator.pop(context);
                     },
                     child: const Text(

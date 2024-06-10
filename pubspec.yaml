@@ -32,8 +32,13 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
+  carousel_slider: ^4.0.0
   flutter_launcher_icons: ^0.13.1
-  showcaseview: ^2.0.0+1
+  showcaseview: ^3.0.0
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
+  firebase_database: ^11.0.0
+  cloud_firestore: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -44,7 +49,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -59,6 +64,32 @@ flutter_launcher_icons:
 flutter:
   assets:
    - assets/image/KomikPlanetLogo.png
+   - assets/image/Komik1.png
+   - assets/image/Komik2.png
+   - assets/image/Cahapter1.png
+   - assets/image/Tumbnail1.png
+   - assets/image/1.png
+   - assets/image/2.png
+   - assets/image/3.png
+   - assets/image/4.png
+   - assets/image/5.png
+   - assets/image/6.png
+   - assets/image/7.png
+   - assets/image/8.png
+   - assets/image/9.png
+   - assets/image/10.png
+   - assets/image/11.png
+   - assets/image/12.png
+   - assets/image/13.png
+   - assets/image/14.png
+   - assets/image/15.png
+   - assets/image/16.png
+   - assets/image/17.png
+   - assets/image/18.png
+   - assets/image/19.png
+   - assets/image/20.png
+   - assets/image/21.png
+   
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
