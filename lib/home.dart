@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'Komik.dart';
 import 'booklish.dart';
 import 'search.dart';
+import 'setting.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,6 +30,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
               // Handle settings button press
             },
           ),
@@ -264,6 +269,7 @@ class ComicDetailPage extends StatefulWidget {
   @override
   _ComicDetailPageState createState() => _ComicDetailPageState();
 }
+
 class _ComicDetailPageState extends State<ComicDetailPage> {
   String selectedTab = 'Description';
   bool isBookmarked = false;
@@ -290,7 +296,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Container(
+            Container(
               height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -326,9 +332,11 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   // Periksa apakah pengguna sudah masuk dan dapatkan ID pengguna jika sudah
                   if (userId != null) {
                     if (isBookmarked) {
-                      await Booklish.addBookmark(userId!, widget.comic); // Tambahkan ke bookmark
+                      await Booklish.addBookmark(
+                          userId!, widget.comic); // Tambahkan ke bookmark
                     } else {
-                      await Booklish.removeBookmark(userId!, widget.comic); // Hapus dari bookmark
+                      await Booklish.removeBookmark(
+                          userId!, widget.comic); // Hapus dari bookmark
                     }
                   }
                 },
