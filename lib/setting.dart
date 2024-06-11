@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'package:komikplanet/settings/accountSettings.dart';
+import 'package:komikplanet/settings/nontification.dart';
+import 'package:komikplanet/settings/payment.dart';
+// import 'package:komikplanet/settings/cretor.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,9 +33,6 @@ class SettingsPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          Icon(Icons.settings),
-        ],
       ),
       body: Center(
         child: Column(
@@ -57,13 +58,34 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
       ),
+      // navigasi di ubah
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 4, // Index tab settings
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Bookmarks',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
+        onTap: (index) {
+          // Navigasi ke halaman yang sesuai berdasarkan index
+        },
       ),
     );
   }
@@ -116,3 +138,29 @@ class LogoutButton extends StatelessWidget {
     );
   }
 }
+
+  Widget _buildTextField({
+    required String label,
+    required String initialValue,
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        TextField(
+          controller: TextEditingController(text: initialValue),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            isDense: true,
+          ),
+          maxLines: maxLines,
+        ),
+      ],
+    );
+  }
