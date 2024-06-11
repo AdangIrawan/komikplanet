@@ -11,6 +11,22 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // List of images and their respective texts
+    final List<Map<String, String>> carouselItems = [
+      {
+        'imagePath': 'assets/image/Tumbnail1.png',
+        'text': 'Tensei Kizoku no Isekai Boukenroku'
+      },
+      {
+        'imagePath': 'assets/image/Tumbnail3.png',
+        'text': 'Boku no Hero Academia'
+      },
+      {
+        'imagePath': 'assets/image/Tumbnail2.png',
+        'text': 'SPY X FAMLIY'
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -57,11 +73,7 @@ class HomePage extends StatelessWidget {
                     // Handle page change if necessary
                   },
                 ),
-                items: [
-                  'assets/image/KomikPlanetLogo.png',
-                  'assets/image/Komik1.png',
-                  'assets/image/Komik2.png',
-                ].map((imagePath) {
+                items: carouselItems.map((item) {
                   return Builder(
                     builder: (BuildContext context) {
                       return Container(
@@ -69,18 +81,18 @@ class HomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                            image: AssetImage(imagePath),
+                            image: AssetImage(item['imagePath']!),
                             fit: BoxFit.cover,
                           ),
                         ),
-                        child: const Stack(
+                        child: Stack(
                           children: [
                             Positioned(
                               bottom: 10,
                               left: 10,
                               child: Text(
-                                'Dark Moon: Children of Vamfield\nwith ENHYPEN',
-                                style: TextStyle(
+                                item['text']!,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
