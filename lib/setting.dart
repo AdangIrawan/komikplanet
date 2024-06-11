@@ -3,6 +3,7 @@ import 'home.dart';
 import 'package:komikplanet/settings/accountSettings.dart';
 import 'package:komikplanet/settings/nontification.dart';
 import 'package:komikplanet/settings/payment.dart';
+import 'package:komikplanet/admin/splash_admin.dart'; // creator page
 // import 'package:komikplanet/settings/cretor.dart';
 
 void main() {
