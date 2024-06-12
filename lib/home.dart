@@ -36,11 +36,12 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {
-              // showSearch(
-              //   context: context,
-              //   delegate: ComicSearchDelegate(),
-              // );
+             onPressed: () async {
+              final comics = await _fetchComics(); // Fetch comics data
+              showSearch(
+                context: context,
+                delegate: ComicSearchDelegate(comics), // Pass comics data
+              );
             },
           ),
           IconButton(
