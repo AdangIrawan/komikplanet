@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -12,6 +13,16 @@ class SignUpPage extends StatelessWidget {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: _passwordController.text);
+
+      // Tambahkan pengguna ke Firestore
+      await FirebaseFirestore.instance
+          .collection('account')
+          .doc(userCredential.user?.uid)
+          .set({
+        'username': _usernameController.text,
+        'email': _emailController.text,
+        'role': 'user', // Default role is user
+      });
 
       // Jika pendaftaran berhasil, navigasi ke halaman login
       Navigator.pushReplacement(

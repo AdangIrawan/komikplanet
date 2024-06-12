@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Komik.dart';
 import 'booklish.dart';
 import 'search.dart';
@@ -21,10 +22,7 @@ class HomePage extends StatelessWidget {
         'imagePath': 'assets/image/Tumbnail3.png',
         'text': 'Boku no Hero Academia'
       },
-      {
-        'imagePath': 'assets/image/Tumbnail2.png',
-        'text': 'SPY X FAMLIY'
-      },
+      {'imagePath': 'assets/image/Tumbnail2.png', 'text': 'SPY X FAMLIY'},
     ];
 
     return Scaffold(
@@ -37,10 +35,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              showSearch(
-                context: context,
-                delegate: ComicSearchDelegate(),
-              );
+              // showSearch(
+              //   context: context,
+              //   delegate: ComicSearchDelegate(),
+              // );
             },
           ),
           IconButton(
@@ -135,19 +133,35 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.6,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: comics
-                    .length, // Set the item count to the length of the comic list
-                itemBuilder: (context, index) {
-                  return ComicCard(comic: comics[index]);
+              FutureBuilder<List<Comic>>(
+                future: _fetchComics(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    final comics = snapshot.data ?? [];
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.6,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: comics.length,
+                      itemBuilder: (context, index) {
+                        return ComicCard(comic: comics[index]);
+                      },
+                    );
+                  }
                 },
               ),
             ],
@@ -191,6 +205,14 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<List<Comic>> _fetchComics() async {
+  final snapshot =
+      await FirebaseFirestore.instance.collection('List Komik').get();
+  return snapshot.docs
+      .map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>))
+      .toList();
 }
 
 class CategoryButton extends StatelessWidget {

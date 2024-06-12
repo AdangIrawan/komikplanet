@@ -29,15 +29,23 @@ class BookmarkedComicsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: userId != null ? FirebaseFirestore.instance.collection('users').doc(userId).collection('Bookmark').snapshots() : null,
+      stream: userId != null
+          ? FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('Bookmark')
+              .snapshots()
+          : null,
       builder: (context, AsyncSnapshot<QuerySnapshot>? snapshot) {
-        if (snapshot == null || snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot == null ||
+            snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Tampilkan loading jika data belum tersedia
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           // Ambil daftar bookmarked comics dari snapshot
-          List<Comic> bookmarkedComics = snapshot.data!.docs.map((DocumentSnapshot doc) {
+          List<Comic> bookmarkedComics =
+              snapshot.data!.docs.map((DocumentSnapshot doc) {
             return Comic.fromMap(doc.data() as Map<String, dynamic>);
           }).toList();
 
@@ -66,7 +74,6 @@ class BookmarkedComicsList extends StatelessWidget {
   }
 }
 
-
 class Booklish {
   static List<Comic> bookmarkedComics = [];
 
@@ -75,10 +82,11 @@ class Booklish {
       bookmarkedComics.add(comic);
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(userId) // Gunakan UID pengguna sebagai ID dokumen
+          .doc(userId)
           .collection('Bookmark')
           .doc(comic.id)
-          .set(comic.toMap());
+          .set(comic
+              .toMap()); // Menggunakan set() untuk menambahkan komik ke Firestore
     }
   }
 
@@ -86,10 +94,10 @@ class Booklish {
     bookmarkedComics.remove(comic);
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(userId) // Gunakan UID pengguna sebagai ID dokumen
+        .doc(userId)
         .collection('Bookmark')
         .doc(comic.id)
-        .delete();
+        .delete(); // Menggunakan delete() untuk menghapus komik dari Firestore
   }
 
   // Method to check if a comic is bookmarked by a specific user
