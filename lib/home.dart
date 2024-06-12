@@ -1,10 +1,11 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'Komik.dart';
 import 'booklish.dart';
 import 'search.dart';
 import 'setting.dart';
+import 'profile.dart'; // Import the profile page
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -50,7 +51,6 @@ class HomePage extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => SettingsPage()),
               );
-              // Handle settings button press
             },
           ),
         ],
@@ -179,13 +179,23 @@ class HomePage extends StatelessWidget {
           ),
         ],
         onTap: (int index) {
-          // Handle bottom navigation bar taps
           if (index == 1) {
-            // Jika ikon "Library" diklik, navigasi ke BookmarkPage
+            // If the Bookmark icon is clicked, navigate to BookmarkPage
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => BookmarkPage()),
             );
+          } else if (index == 3) {
+            // If the Profile icon is clicked, navigate to ProfilePage
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+              );
+            } else {
+              // Handle user not logged in
+            }
           }
         },
       ),
@@ -242,8 +252,7 @@ class ComicCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                 image: DecorationImage(
-                  image: AssetImage(comic
-                      .imagePath), // Use the image path from the comic data
+                  image: AssetImage(comic.imagePath), // Use the image path from the comic data
                   fit: BoxFit.cover,
                 ),
               ),
@@ -290,9 +299,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
   @override
   void initState() {
     super.initState();
-    // Dapatkan UID pengguna yang sedang masuk
     userId = FirebaseAuth.instance.currentUser?.uid;
-    // Periksa apakah komik sudah di-bookmark saat halaman dimuat
     isBookmarked = Booklish.bookmarkedComics.contains(widget.comic);
   }
 
@@ -341,14 +348,11 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   setState(() {
                     isBookmarked = !isBookmarked;
                   });
-                  // Periksa apakah pengguna sudah masuk dan dapatkan ID pengguna jika sudah
                   if (userId != null) {
                     if (isBookmarked) {
-                      await Booklish.addBookmark(
-                          userId!, widget.comic); // Tambahkan ke bookmark
+                      await Booklish.addBookmark(userId!, widget.comic);
                     } else {
-                      await Booklish.removeBookmark(
-                          userId!, widget.comic); // Hapus dari bookmark
+                      await Booklish.removeBookmark(userId!, widget.comic);
                     }
                   }
                 },
@@ -357,7 +361,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   children: [
                     Icon(
                       isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: Colors.blue, // Ganti warna sesuai kebutuhan
+                      color: Colors.blue,
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -468,12 +472,11 @@ class ChapterDetailPage extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 17, 0, 58),
       ),
       body: PageView.builder(
-        itemCount: images.length, // Update with the actual number of images
+        itemCount: images.length,
         itemBuilder: (context, index) {
           return Container(
             padding: const EdgeInsets.all(8.0),
-            child: Image.asset(images[index],
-                fit: BoxFit.contain), // Use the actual image paths
+            child: Image.asset(images[index], fit: BoxFit.contain),
           );
         },
       ),
