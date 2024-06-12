@@ -11,6 +11,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   late Future<List<Comic>> _comicsFuture;
+  List<Comic> _comics = []; // Tambahkan variabel untuk menyimpan list komik
 
   @override
   void initState() {
@@ -21,10 +22,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Future<List<Comic>> _fetchComics() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('List Komik').get();
-    return snapshot.docs.map((doc) => Comic.fromMap(doc.data())).toList();
+    _comics = snapshot.docs.map((doc) => Comic.fromMap(doc.data())).toList(); // Simpan list komik ke dalam variabel
+    return _comics;
   }
 
-  void _addComic(Comic comic) {
+   void _addComic(Comic comic) {
     setState(() {
       // Tambahkan komik baru ke daftar komik
       _comicsFuture.then((comics) {
@@ -64,13 +66,27 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          AddComicPage(onAddComic: _addComic)),
+                    builder: (context) =>
+                        AddComicPage(onAddComic: _addComic),
+                  ),
                 );
               },
               child: Text('Add Comic'),
             ),
             SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddChapterPage(
+                        comics: _comics, // Gunakan variabel _comics di sini
+                        onAddChapter: _addChapter),
+                  ),
+                );
+              },
+              child: Text('Add Chapter'),
+            ),
             FutureBuilder<List<Comic>>(
               future: _comicsFuture,
               builder: (context, snapshot) {
@@ -104,3 +120,4 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 }
+
