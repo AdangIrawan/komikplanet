@@ -22,7 +22,9 @@ class HomePage extends StatelessWidget {
         'imagePath': 'assets/image/Tumbnail3.png',
         'text': 'Boku no Hero Academia'
       },
-      {'imagePath': 'assets/image/Tumbnail2.png', 'text': 'SPY X FAMLIY'},
+      { 
+        'imagePath': 'assets/image/Tumbnail2.png', 
+        'text': 'SPY X FAMLIY'},
     ];
 
     return Scaffold(
