@@ -53,6 +53,7 @@ class BookmarkedComicsList extends StatelessWidget {
               itemCount: bookmarkedComics.length,
               itemBuilder: (context, index) {
                 return ListTile(
+                  leading: Image.asset(bookmarkedComics[index].imagePath), // Tambahkan gambar sebagai leading
                   title: Text(bookmarkedComics[index].title),
                   subtitle: Text(bookmarkedComics[index].genre),
                   // Tambahkan onTap untuk menavigasi ke detail komik jika diinginkan
@@ -102,4 +103,10 @@ class Booklish {
         .get();
     return snapshot.exists;
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: BookmarkPage(),
+  ));
 }
