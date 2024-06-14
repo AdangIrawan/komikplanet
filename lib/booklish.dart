@@ -100,8 +100,7 @@ class Booklish {
           .doc(userId)
           .collection('Bookmark')
           .doc(comic.id)
-          .set(comic
-              .toMap()); // Menggunakan set() untuk menambahkan komik ke Firestore
+          .set(comic.toMap());
     }
   }
 

@@ -18,20 +18,28 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
   String selectedTab = 'Description';
   bool isBookmarked = false;
   String? userId;
-  List<String> readChapters = []; // Tambahkan list untuk menyimpan chapter yang sudah dibaca
+  List<String> readChapters = [];
 
   @override
   void initState() {
     super.initState();
     userId = FirebaseAuth.instance.currentUser?.uid;
-    isBookmarked = Booklish.bookmarkedComics.contains(widget.comic);
-
-    // Panggil fungsi untuk mendapatkan chapter yang sudah dibaca saat halaman dimuat
+    // Memeriksa apakah komik sudah di-bookmark oleh pengguna
+    checkIsBookmarked();
+    // Mengambil daftar chapter yang sudah dibaca oleh pengguna
     _fetchReadChapters();
   }
 
+  Future<void> checkIsBookmarked() async {
+    if (userId != null) {
+      bool bookmarked = await Booklish.isComicBookmarked(userId!, widget.comic);
+      setState(() {
+        isBookmarked = bookmarked;
+      });
+    }
+  }
+
   Future<void> _fetchReadChapters() async {
-    // Pastikan userId tidak null dan widget comic memiliki id
     if (userId != null && widget.comic.id.isNotEmpty) {
       List<String> chapters = await Booklish.getReadChapters(userId!, widget.comic.id);
       setState(() {
@@ -85,6 +93,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   setState(() {
                     isBookmarked = !isBookmarked;
                   });
+                  // Menambah atau menghapus komik dari daftar bookmark di Firestore
                   if (userId != null) {
                     if (isBookmarked) {
                       await Booklish.addBookmark(userId!, widget.comic);
@@ -98,7 +107,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   children: [
                     Icon(
                       isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: Colors.blue,
+                      color: isBookmarked ? Colors.blue : Colors.grey, // Ubah warna ikon sesuai status bookmark
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -172,7 +181,6 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                     style: TextStyle(color: isRead ? Colors.blue : Colors.black),
                   ),
                   onTap: () async {
-                    // Tandai chapter sebagai sudah dibaca saat di tap
                     if (!isRead) {
                       readChapters.add(widget.comic.chapters[index].title);
                       await FirebaseFirestore.instance
@@ -181,7 +189,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                           .collection('ReadChapters')
                           .doc(widget.comic.id)
                           .set({'chapters': readChapters});
-                      setState(() {}); // Update tampilan
+                      setState(() {});
                     }
 
                     Navigator.push(
