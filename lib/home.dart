@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,9 @@ import 'Komik.dart';
 import 'booklish.dart';
 import 'search.dart';
 import 'setting.dart';
+import 'profile.dart';
+import 'notifications.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -222,6 +226,19 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => BookmarkPage()),
+            );
+          }
+           if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationsPage()),
+            );
+          }
+           else if (index == 3) {
+            User user = FirebaseAuth.instance.currentUser!;
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
             );
           }
         },

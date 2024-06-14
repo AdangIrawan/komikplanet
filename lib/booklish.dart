@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Komik.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'comicDetail.dart';
+import 'home.dart'; // Make sure to import the HomePage
+import 'notifications.dart'; // Make sure to import the NotificationsPage
+import 'profile.dart'; // Make sure to import the ProfilePage
 
 class BookmarkPage extends StatelessWidget {
   const BookmarkPage({Key? key}) : super(key: key);
@@ -18,6 +21,52 @@ class BookmarkPage extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 11, 1, 35),
       ),
       body: BookmarkedComicsList(userId: userId),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color.fromARGB(255, 11, 1, 35), // color fix
+        unselectedItemColor: Colors.grey, // Set color for unselected items
+        selectedItemColor: Colors.white, // Set color for selected items
+        type: BottomNavigationBarType.fixed, // Ensure the background is applied to all items
+        currentIndex: 1, // Set the current index to highlight the Bookmark tab
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Bookmark',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else if (index == 1) {
+            // Already on BookmarkPage, no need to navigate
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationsPage()),
+            );
+          } else if (index == 3) {
+            User user = FirebaseAuth.instance.currentUser!;
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -124,22 +173,21 @@ class Booklish {
         .get();
     return snapshot.exists;
   }
-   static Future<List<String>> getReadChapters(String userId, String comicId) async {
-  List<String> readChapters = [];
 
-  DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('ReadChapters')
-      .doc(comicId)
-      .get();
+  static Future<List<String>> getReadChapters(String userId, String comicId) async {
+    List<String> readChapters = [];
 
-  if (snapshot.exists) {
-    readChapters = List<String>.from(snapshot.data()!['chapters'] as List<dynamic>);
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('ReadChapters')
+        .doc(comicId)
+        .get();
+
+    if (snapshot.exists) {
+      readChapters = List<String>.from(snapshot.data()!['chapters'] as List<dynamic>);
+    }
+
+    return readChapters;
   }
-
-  return readChapters;
-}
-
-
 }
