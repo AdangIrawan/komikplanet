@@ -1,5 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:komikplanet/comicDetail.dart';
 import 'Komik.dart';
@@ -37,7 +37,11 @@ class _HomePageState extends State<HomePage> {
   void _filterComicsByGenre(String genre) {
     setState(() {
       selectedGenre = genre;
-      filteredComics = comics.where((comic) => comic.genre == genre).toList();
+      if (genre == 'All') {
+        filteredComics = comics;
+      } else {
+        filteredComics = comics.where((comic) => comic.genre == genre).toList();
+      }
     });
   }
 
@@ -58,7 +62,7 @@ class _HomePageState extends State<HomePage> {
       },
     ];
 
-    final List<String> categories = ['Action', 'Comedy', 'Drama', 'Fantasy', 'Romance'];
+    final List<String> categories = ['All', 'Action', 'Comedy', 'Drama', 'Fantasy', 'Romance'];
 
     return Scaffold(
       appBar: AppBar(
