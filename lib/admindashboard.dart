@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Komik.dart'; // Import the comic.dart file
 import 'addComic.dart';
 import 'addChapter.dart';
+import 'login.dart';
 
 class AdminDashboard extends StatefulWidget {
   @override
@@ -22,11 +23,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Future<List<Comic>> _fetchComics() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('List Komik').get();
-    _comics = snapshot.docs.map((doc) => Comic.fromMap(doc.data())).toList(); // Simpan list komik ke dalam variabel
+    _comics = snapshot.docs
+        .map((doc) => Comic.fromMap(doc.data()))
+        .toList(); // Simpan list komik ke dalam variabel
     return _comics;
   }
 
-   void _addComic(Comic comic) {
+  void _addComic(Comic comic) {
     setState(() {
       // Tambahkan komik baru ke daftar komik
       _comicsFuture.then((comics) {
@@ -51,6 +54,21 @@ class _AdminDashboardState extends State<AdminDashboard> {
       appBar: AppBar(
         title: Text('Admin Dashboard'),
         backgroundColor: Colors.blueGrey,
+        actions: [
+          IconButton(
+            icon: Icon(Icons
+                .exit_to_app), // Gunakan icon exit_to_app atau icon lain yang sesuai
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      LoginPage(), // Ganti dengan halaman login yang sesuai
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -66,8 +84,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        AddComicPage(onAddComic: _addComic),
+                    builder: (context) => AddComicPage(onAddComic: _addComic),
                   ),
                 );
               },
@@ -120,4 +137,3 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 }
-
