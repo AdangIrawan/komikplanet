@@ -7,12 +7,42 @@ import 'booklish.dart';
 import 'search.dart';
 import 'setting.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Comic> comics = [];
+  List<Comic> filteredComics = [];
+  String selectedGenre = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchComics();
+  }
+
+  Future<void> _fetchComics() async {
+    final snapshot = await FirebaseFirestore.instance.collection('List Komik').get();
+    final fetchedComics = snapshot.docs.map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    setState(() {
+      comics = fetchedComics;
+      filteredComics = fetchedComics;
+    });
+  }
+
+  void _filterComicsByGenre(String genre) {
+    setState(() {
+      selectedGenre = genre;
+      filteredComics = comics.where((comic) => comic.genre == genre).toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // List of images and their respective texts
     final List<Map<String, String>> carouselItems = [
       {
         'imagePath': 'assets/image/Tumbnail1.png',
@@ -22,10 +52,13 @@ class HomePage extends StatelessWidget {
         'imagePath': 'assets/image/Tumbnail3.png',
         'text': 'Boku no Hero Academia'
       },
-      { 
-        'imagePath': 'assets/image/Tumbnail2.png', 
-        'text': 'SPY X FAMLIY'},
+      {
+        'imagePath': 'assets/image/Tumbnail2.png',
+        'text': 'SPY X FAMILY'
+      },
     ];
+
+    final List<String> categories = ['Action', 'Comedy', 'Drama', 'Fantasy', 'Romance'];
 
     return Scaffold(
       appBar: AppBar(
@@ -36,11 +69,10 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-             onPressed: () async {
-              final comics = await _fetchComics(); // Fetch comics data
+            onPressed: () {
               showSearch(
                 context: context,
-                delegate: ComicSearchDelegate(comics), // Pass comics data
+                delegate: ComicSearchDelegate(comics),
               );
             },
           ),
@@ -51,7 +83,6 @@ class HomePage extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => SettingsPage()),
               );
-              // Handle settings button press
             },
           ),
         ],
@@ -70,9 +101,7 @@ class HomePage extends StatelessWidget {
                   autoPlay: true,
                   enlargeCenterPage: true,
                   aspectRatio: 2.0,
-                  onPageChanged: (index, reason) {
-                    // Handle page change if necessary
-                  },
+                  onPageChanged: (index, reason) {},
                 ),
                 items: carouselItems.map((item) {
                   return Builder(
@@ -115,68 +144,57 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Container(
-                height: 50, // Set appropriate height here
+                height: 50,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      width: 130, // Set fixed width for each category button
+                      width: 130,
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: CategoryButton(categories[index]),
+                      child: CategoryButton(
+                        label: categories[index],
+                        onTap: () => _filterComicsByGenre(categories[index]),
+                        isSelected: selectedGenre == categories[index],
+                      ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 20),
-
               // Recommendations
               const Text(
                 'Rekomendasi',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              FutureBuilder<List<Comic>>(
-                future: _fetchComics(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    final comics = snapshot.data ?? [];
-                    return GridView.builder(
+              filteredComics.isEmpty
+                  ? Center(
+                      child: Text('No comics found for selected genre.'),
+                    )
+                  : GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.6,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),
-                      itemCount: comics.length,
+                      itemCount: filteredComics.length,
                       itemBuilder: (context, index) {
-                        return ComicCard(comic: comics[index]);
+                        return ComicCard(comic: filteredComics[index]);
                       },
-                    );
-                  }
-                },
-              ),
+                    ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 11, 1, 35), //color fix
-        unselectedItemColor: Colors.grey, // Set color for unselected items
-        selectedItemColor: Colors.white, // Set color for selected items
-        type: BottomNavigationBarType
-            .fixed, // Ensure the background is applied to all items
+        backgroundColor: Color.fromARGB(255, 11, 1, 35),
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -196,9 +214,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
         onTap: (int index) {
-          // Handle bottom navigation bar taps
           if (index == 1) {
-            // Jika ikon "Library" diklik, navigasi ke BookmarkPage
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => BookmarkPage()),
@@ -210,29 +226,25 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Future<List<Comic>> _fetchComics() async {
-  final snapshot =
-      await FirebaseFirestore.instance.collection('List Komik').get();
-  return snapshot.docs
-      .map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>))
-      .toList();
-}
-
 class CategoryButton extends StatelessWidget {
   final String label;
+  final VoidCallback onTap;
+  final bool isSelected;
 
-  const CategoryButton(this.label);
+  const CategoryButton({
+    required this.label,
+    required this.onTap,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // Handle category button press
-      },
+      onPressed: onTap,
       child: Text(label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey.shade300,
-        foregroundColor: Colors.black,
+        backgroundColor: isSelected ? Colors.blueGrey : Colors.grey.shade300,
+        foregroundColor: isSelected ? Colors.white : Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -267,8 +279,7 @@ class ComicCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                 image: DecorationImage(
-                  image: AssetImage(comic
-                      .imagePath), // Use the image path from the comic data
+                  image: AssetImage(comic.imagePath),
                   fit: BoxFit.cover,
                 ),
               ),

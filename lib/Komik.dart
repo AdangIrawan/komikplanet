@@ -1,14 +1,3 @@
-const List<String> categories = [
-  'Fantasy',
-  'Action',
-  'Romance',
-  'Comedy',
-  'Horror',
-  'Sci-Fi',
-  'Drama',
-  'Adventure',
-];
-
 class Comic {
   final String id;
   final String title;
