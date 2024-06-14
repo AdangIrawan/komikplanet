@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:komikplanet/chapterDetail.dart';
 import 'Komik.dart';
 import 'booklish.dart';
@@ -17,14 +18,26 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
   String selectedTab = 'Description';
   bool isBookmarked = false;
   String? userId;
+  List<String> readChapters = []; // Tambahkan list untuk menyimpan chapter yang sudah dibaca
 
   @override
   void initState() {
     super.initState();
-    // Dapatkan UID pengguna yang sedang masuk
     userId = FirebaseAuth.instance.currentUser?.uid;
-    // Periksa apakah komik sudah di-bookmark saat halaman dimuat
     isBookmarked = Booklish.bookmarkedComics.contains(widget.comic);
+
+    // Panggil fungsi untuk mendapatkan chapter yang sudah dibaca saat halaman dimuat
+    _fetchReadChapters();
+  }
+
+  Future<void> _fetchReadChapters() async {
+    // Pastikan userId tidak null dan widget comic memiliki id
+    if (userId != null && widget.comic.id.isNotEmpty) {
+      List<String> chapters = await Booklish.getReadChapters(userId!, widget.comic.id);
+      setState(() {
+        readChapters = chapters;
+      });
+    }
   }
 
   @override
@@ -72,14 +85,11 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   setState(() {
                     isBookmarked = !isBookmarked;
                   });
-                  // Periksa apakah pengguna sudah masuk dan dapatkan ID pengguna jika sudah
                   if (userId != null) {
                     if (isBookmarked) {
-                      await Booklish.addBookmark(
-                          userId!, widget.comic); // Tambahkan ke bookmark
+                      await Booklish.addBookmark(userId!, widget.comic);
                     } else {
-                      await Booklish.removeBookmark(
-                          userId!, widget.comic); // Hapus dari bookmark
+                      await Booklish.removeBookmark(userId!, widget.comic);
                     }
                   }
                 },
@@ -88,7 +98,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                   children: [
                     Icon(
                       isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: Colors.blue, // Ganti warna sesuai kebutuhan
+                      color: Colors.blue,
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -155,9 +165,25 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: widget.comic.chapters.length,
               itemBuilder: (context, index) {
+                bool isRead = readChapters.contains(widget.comic.chapters[index].title);
                 return ListTile(
-                  title: Text(widget.comic.chapters[index].title),
-                  onTap: () {
+                  title: Text(
+                    widget.comic.chapters[index].title,
+                    style: TextStyle(color: isRead ? Colors.blue : Colors.black),
+                  ),
+                  onTap: () async {
+                    // Tandai chapter sebagai sudah dibaca saat di tap
+                    if (!isRead) {
+                      readChapters.add(widget.comic.chapters[index].title);
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userId)
+                          .collection('ReadChapters')
+                          .doc(widget.comic.id)
+                          .set({'chapters': readChapters});
+                      setState(() {}); // Update tampilan
+                    }
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

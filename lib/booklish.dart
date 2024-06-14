@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Komik.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'comicDetail.dart';
 
 class BookmarkPage extends StatelessWidget {
   const BookmarkPage({Key? key}) : super(key: key);
@@ -39,9 +40,13 @@ class BookmarkedComicsList extends StatelessWidget {
       builder: (context, AsyncSnapshot<QuerySnapshot>? snapshot) {
         if (snapshot == null ||
             snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Tampilkan loading jika data belum tersedia
+          return Center(
+            child: CircularProgressIndicator(), // Tampilkan loading jika data belum tersedia
+          );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
         } else {
           // Ambil daftar bookmarked comics dari snapshot
           List<Comic> bookmarkedComics =
@@ -60,11 +65,20 @@ class BookmarkedComicsList extends StatelessWidget {
             return ListView.builder(
               itemCount: bookmarkedComics.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Image.asset(bookmarkedComics[index].imagePath), // Tambahkan gambar sebagai leading
-                  title: Text(bookmarkedComics[index].title),
-                  subtitle: Text(bookmarkedComics[index].genre),
-                  // Tambahkan onTap untuk menavigasi ke detail komik jika diinginkan
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ComicDetailPage(comic: bookmarkedComics[index]),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    leading: Image.asset(bookmarkedComics[index].imagePath), // Tambahkan gambar sebagai leading
+                    title: Text(bookmarkedComics[index].title),
+                    subtitle: Text(bookmarkedComics[index].genre),
+                  ),
                 );
               },
             );
@@ -111,10 +125,22 @@ class Booklish {
         .get();
     return snapshot.exists;
   }
+   static Future<List<String>> getReadChapters(String userId, String comicId) async {
+  List<String> readChapters = [];
+
+  DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('ReadChapters')
+      .doc(comicId)
+      .get();
+
+  if (snapshot.exists) {
+    readChapters = List<String>.from(snapshot.data()!['chapters'] as List<dynamic>);
+  }
+
+  return readChapters;
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: BookmarkPage(),
-  ));
+
 }
