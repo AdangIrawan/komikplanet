@@ -19,7 +19,7 @@ class _AddChapterPageState extends State<AddChapterPage> {
   final TextEditingController _imagesController = TextEditingController();
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState?.validate() ?? false && _selectedComicId != null) {
+    if (_formKey.currentState?.validate() ?? false) {
       final newChapter = Chapter(
         title: _chapterTitleController.text,
         images: _imagesController.text.split(',').map((image) => image.trim()).toList(),
