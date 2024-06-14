@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'home.dart'; // Import HomePage if not already imported
 import 'notifications.dart'; // Import NotificationsPage if not already imported
 import 'booklish.dart'; // Import BookmarkPage if not already imported
+import 'main.dart'; // Import your main.dart file where you initialize Firebase
 
 class ProfilePage extends StatelessWidget {
   final User user;
@@ -13,6 +14,20 @@ class ProfilePage extends StatelessWidget {
   Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData() {
     // Fetch user data from Firestore
     return FirebaseFirestore.instance.collection('account').doc(user.uid).get();
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyApp()), // Replace MyApp with your initial app page
+        (route) => false, // Prevent user from navigating back
+      );
+    } catch (e) {
+      print('Error signing out: $e');
+      // Handle error signing out
+    }
   }
 
   @override
@@ -38,6 +53,12 @@ class ProfilePage extends StatelessWidget {
           appBar: AppBar(
             title: Text('Profile'),
             backgroundColor: Color.fromARGB(255, 11, 1, 35),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.logout),
+                onPressed: () => _signOut(context), // Tambahkan tombol logout di sini
+              ),
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
