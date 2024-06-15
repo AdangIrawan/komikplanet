@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -13,16 +14,26 @@ class SignUpPage extends StatelessWidget {
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: _passwordController.text);
 
-      // Jika pendaftaran berhasil, navigasi ke halaman login
+      // Add user details to Firestore
+      await FirebaseFirestore.instance
+          .collection('account')
+          .doc(userCredential.user?.uid)
+          .set({
+        'username': _usernameController.text,
+        'email': _emailController.text,
+        'role': 'user', // Default role is user
+      });
+
+      // Navigate to login page after successful registration
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } on FirebaseAuthException catch (e) {
-      // Tangani kesalahan yang mungkin terjadi selama pendaftaran
+      // Handle registration errors
       print('Error during registration: $e');
 
-      // Tampilkan pesan kesalahan kepada pengguna
+      // Show error message to user
       showDialog(
         context: context,
         builder: (BuildContext context) {

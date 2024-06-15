@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^5.0.0
   firebase_database: ^11.0.0
   cloud_firestore: ^5.0.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,12 @@ flutter:
    - assets/image/Komik2.png
    - assets/image/Cahapter1.png
    - assets/image/Tumbnail1.png
+   - assets/image/Tumbnail2.png
+   - assets/image/Tumbnail3.png
+   - assets/image/Tumbnail4.png
+   - assets/image/Tumbnail5.png
+   - assets/image/Tumbnail6.png
+   - assets/image/Tumbnail7.png
    - assets/image/1.png
    - assets/image/2.png
    - assets/image/3.png

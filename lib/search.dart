@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:komikplanet/comicDetail.dart';
 import 'Komik.dart';
-import 'home.dart';
 
 class ComicSearchDelegate extends SearchDelegate {
+  final List<Comic> comics; // Tambahkan properti daftar komik
+
+  ComicSearchDelegate(this.comics); // Tambahkan parameter konstruktor
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
