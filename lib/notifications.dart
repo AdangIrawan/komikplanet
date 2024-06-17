@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-
 import 'home.dart'; // Import HomePage if not already imported
 import 'profile.dart'; // Import ProfilePage if not already imported
 import 'booklish.dart'; // Import BookmarkPage if not already imported
@@ -16,8 +15,10 @@ class NotificationsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text('Notifications',style: TextStyle(color: Colors.white), // Change text color here),
+        ),
         backgroundColor: Color.fromARGB(255, 11, 1, 35),
+        iconTheme: IconThemeData(color: Colors.white), // Change icon (back button) color here
       ),
       body: ListView.builder(
         itemCount: notifications.length,
@@ -55,32 +56,34 @@ class NotificationsPage extends StatelessWidget {
             label: 'Profile',
           ),
         ],
+        currentIndex: 2, // Set currentIndex to 2 to highlight Notifications
         onTap: (int index) {
-          if (index == 0) {
-            // If the Home icon is clicked, navigate to HomePage
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          } else if (index == 1) {
-            // If the Bookmark icon is clicked, navigate to BookmarkPage
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BookmarkPage()),
-            );
-          } else if (index == 2) {
-            // If the Notifications icon is clicked, stay on the NotificationsPage
-          } else if (index == 3) {
-            // If the Profile icon is clicked, navigate to ProfilePage
-            final user = FirebaseAuth.instance.currentUser;
-            if (user != null) {
+          // Handle tab selection
+          switch (index) {
+            case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+                MaterialPageRoute(builder: (context) => HomePage()),
               );
-            } else {
-              // Handle user not logged in
-            }
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BookmarkPage()),
+              );
+              break;
+            case 2:
+              // Already on Notifications page
+              break;
+            case 3:
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+                );
+              } 
+              break;
           }
         },
       ),

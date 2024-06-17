@@ -17,8 +17,10 @@ class BookmarkPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bookmark'),
+        title: Text('Bookmark',style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Color.fromARGB(255, 11, 1, 35),
+         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: BookmarkedComicsList(userId: userId),
       bottomNavigationBar: BottomNavigationBar(
