@@ -54,7 +54,7 @@ class Comic {
 
 class Chapter {
   final String title;
-  final String pdfPath;
+  final String pdfPath; // Tambahkan pdfPath
 
   const Chapter({
     required this.title,
@@ -64,7 +64,7 @@ class Chapter {
   factory Chapter.fromMap(Map<String, dynamic> map) {
     return Chapter(
       title: map['title'] ?? '',
-      pdfPath: map['pdfPath'] ?? '',
+      pdfPath: map['pdfPath'] ?? '', // Sesuaikan dengan nama field pdfPath
     );
   }
 
@@ -75,4 +75,3 @@ class Chapter {
     };
   }
 }
-

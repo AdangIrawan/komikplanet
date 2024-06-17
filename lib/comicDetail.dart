@@ -198,7 +198,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                         builder: (context) => ChapterDetailPage(
                           title: widget.comic.title,
                           chapter: widget.comic.chapters[index].title,
-                          pdfPath: Future.value(widget.comic.chapters[index].pdfPath),
+                          pdfPath: widget.comic.chapters[index].pdfPath,
                         ),
                       ),
                     );
