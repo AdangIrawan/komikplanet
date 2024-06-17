@@ -17,7 +17,7 @@ class NotificationsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
-        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35),
       ),
       body: ListView.builder(
         itemCount: notifications.length,
@@ -33,7 +33,7 @@ class NotificationsPage extends StatelessWidget {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 17, 0, 58), // color fix
+        backgroundColor: Color.fromARGB(255, 11, 1, 35), // color fix
         unselectedItemColor: Colors.grey, // Set color for unselected items
         selectedItemColor: Colors.white, // Set color for selected items
         type: BottomNavigationBarType.fixed, // Ensure the background is applied to all items
