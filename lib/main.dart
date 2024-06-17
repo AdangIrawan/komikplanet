@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'login.dart';
+import 'package:komikplanet/Admin_Dasboard/splash_admin.dart';
+import 'package:komikplanet/settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
