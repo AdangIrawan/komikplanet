@@ -1,13 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'home.dart';
 import 'regis.dart';
+import 'admindashboard.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _login(BuildContext context) async {
+    try {
+      final String email = _usernameController.text;
+      final String password = _passwordController.text;
+
+      // Authenticate user with email and password
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Check if user exists
+      if (userCredential.user != null) {
+        // Get user role from Firestore
+        final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('account')
+            .doc(userCredential.user?.uid)
+            .get();
+
+        final String role = userDoc['role'];
+
+        // Navigate to the appropriate page based on role
+        if (role == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminDashboard()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      }
+    } catch (e) {
+      // Handle login errors
+      print('Error during login: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Login Failed"),
+            content: Text(e.toString()),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,46 +115,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
-                  try {
-                    final String email = _usernameController.text;
-                    final String password = _passwordController.text;
-
-                    // Authenticate user with email and password
-                    final UserCredential userCredential =
-                        await _auth.signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
-
-                    // Check if user exists and navigate to home page
-                    if (userCredential.user != null) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    }
-                  } catch (e) {
-                    // Handle login errors
-                    print('Error during login: $e');
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("Login Failed"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
+                onPressed: () => _login(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
                   padding: const EdgeInsets.symmetric(vertical: 15),
