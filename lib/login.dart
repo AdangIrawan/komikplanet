@@ -193,16 +193,16 @@ class LoginPage extends StatelessWidget {
                   style: TextStyle(
                       color: Color.fromARGB(255, 194, 194, 194), fontSize: 12),
                   children: [
-                    TextSpan(text: 'By clicking continue, you agree to our '),
+                    TextSpan(text: ''),
                     TextSpan(
-                      text: 'Terms of Service ',
+                      text: 'Dev_Comic Planet',
                       style: TextStyle(
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: '\nand '),
+                    TextSpan(text: ''),
                     TextSpan(
-                      text: 'Privacy Policy',
+                      text: '',
                       style: TextStyle(
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontWeight: FontWeight.bold),

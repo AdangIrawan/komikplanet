@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       },
     ];
 
-    final List<String> categories = ['All', 'Action', 'Comedy', 'Drama', 'Fantasy', 'Romance'];
+    final List<String> categories = ['All', 'Action', 'Comedy', 'Drama', 'Fantasy', 'Romance', 'Harem'];
 
     return Scaffold(
       appBar: AppBar(
