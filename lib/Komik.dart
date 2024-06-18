@@ -54,24 +54,24 @@ class Comic {
 
 class Chapter {
   final String title;
-  final List<String> images;
+  final String pdfPath; // Tambahkan pdfPath
 
   const Chapter({
     required this.title,
-    required this.images,
+    required this.pdfPath,
   });
 
   factory Chapter.fromMap(Map<String, dynamic> map) {
     return Chapter(
       title: map['title'] ?? '',
-      images: List<String>.from(map['images'] ?? []),
+      pdfPath: map['pdfPath'] ?? '', // Sesuaikan dengan nama field pdfPath
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'title': title,
-      'images': images,
+      'pdfPath': pdfPath,
     };
   }
 }

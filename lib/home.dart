@@ -66,12 +66,13 @@ class _HomePageState extends State<HomePage> {
       },
     ];
 
-    final List<String> categories = ['All', 'Action', 'Comedy', 'Drama', 'Fantasy', 'Romance'];
+    final List<String> categories = ['All', 'Action', 'Comedy', 'Drama', 'Fantasy', 'Romance', 'Harem'];
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
+
           child: Image.asset('assets/image/KomikPlanetLogo.png'),
         ),
         actions: [
@@ -111,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                   aspectRatio: 2.0,
                   onPageChanged: (index, reason) {},
                 ),
+
                 items: carouselItems.map((item) {
                   return Builder(
                     builder: (BuildContext context) {
@@ -144,6 +146,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   );
                 }).toList(),
+
               ),
               // Category
               const Text(

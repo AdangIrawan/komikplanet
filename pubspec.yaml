@@ -40,6 +40,11 @@ dependencies:
   firebase_database: ^11.0.0
   cloud_firestore: ^5.0.0
   image_picker: ^1.1.2
+  file_picker: ^8.0.5
+  flutter_pdfview: ^1.3.2
+  flutter_cached_pdfview: ^0.4.2
+  path_provider: ^2.1.3
+  firebase_storage: ^12.0.1
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +101,7 @@ flutter:
    - assets/image/19.png
    - assets/image/20.png
    - assets/image/21.png
+   - assets/pdf/Chapter 1 tensei no isekai.pdf
    
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
