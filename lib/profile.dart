@@ -51,8 +51,9 @@ class ProfilePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Profile'),
+            title: Text('Profile', style: TextStyle(color: Colors.white),),
             backgroundColor: Color.fromARGB(255, 11, 1, 35),
+            iconTheme: IconThemeData(color: Colors.white),
             actions: [
               IconButton(
                 icon: Icon(Icons.logout),
@@ -110,8 +111,8 @@ class ProfilePage extends StatelessWidget {
                 label: 'Bookmark',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Notifications',
+                icon: Icon(Icons.emoji_events),
+                label: 'Ranking',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -135,7 +136,7 @@ class ProfilePage extends StatelessWidget {
                 // If the Notifications icon is clicked, navigate to NotificationsPage
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => RankPage()),
                 );
               }
               // Note: For index 3 (Profile), we stay on the ProfilePage
