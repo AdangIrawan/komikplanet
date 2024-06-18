@@ -69,7 +69,11 @@ class NotificationsPage extends StatelessWidget {
               MaterialPageRoute(builder: (context) => BookmarkPage()),
             );
           } else if (index == 2) {
-            // If the Notifications icon is clicked, stay on the NotificationsPage
+            // If the Notifications 
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationsPage()),
+            );
           } else if (index == 3) {
             // If the Profile icon is clicked, navigate to ProfilePage
             final user = FirebaseAuth.instance.currentUser;
