@@ -126,7 +126,18 @@ class BookmarkedComicsList extends StatelessWidget {
                     );
                   },
                   child: ListTile(
-                    leading: Image.asset(bookmarkedComics[index].imagePath), // Tambahkan gambar sebagai leading
+                    leading: Container(
+                      width: 50, // Atur lebar gambar
+                      height: 50, // Atur tinggi gambar
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: AssetImage(bookmarkedComics[index].imagePath),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+
                     title: Text(bookmarkedComics[index].title),
                     subtitle: Text(bookmarkedComics[index].genre),
                   ),
