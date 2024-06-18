@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Komik.dart';
+import 'komik.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'comicDetail.dart';
 import 'home.dart'; // Make sure to import the HomePage
-import 'notifications.dart'; // Make sure to import the NotificationsPage
+import 'rank.dart'; // Make sure to import the NotificationsPage
 import 'profile.dart'; // Make sure to import the ProfilePage
 
 class BookmarkPage extends StatelessWidget {
@@ -39,8 +39,8 @@ class BookmarkPage extends StatelessWidget {
             label: 'Bookmark',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.emoji_events),
+            label: 'Ranking',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -58,7 +58,7 @@ class BookmarkPage extends StatelessWidget {
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NotificationsPage()),
+              MaterialPageRoute(builder: (context) => RankPage()),
             );
           } else if (index == 3) {
             User user = FirebaseAuth.instance.currentUser!;

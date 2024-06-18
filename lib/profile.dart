@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'home.dart'; // Import HomePage if not already imported
-import 'notifications.dart'; // Import NotificationsPage if not already imported
-import 'booklish.dart'; // Import BookmarkPage if not already imported
+import 'rank.dart'; // Import NotificationsPage if not already imported
+import 'bookmark.dart'; // Import BookmarkPage if not already imported
 import 'main.dart'; // Import your main.dart file where you initialize Firebase
 
 class ProfilePage extends StatelessWidget {
@@ -112,8 +112,8 @@ class ProfilePage extends StatelessWidget {
                 label: 'Bookmark',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Notifications',
+                icon: Icon(Icons.emoji_events),
+                label: 'Ranking',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -137,7 +137,7 @@ class ProfilePage extends StatelessWidget {
                 // If the Notifications icon is clicked, navigate to NotificationsPage
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => RankPage()),
                 );
               }
               // Note: For index 3 (Profile), we stay on the ProfilePage

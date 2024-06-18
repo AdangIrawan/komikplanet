@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Komik.dart'; // Import the comic.dart file, which includes the Chapter class
+import 'komik.dart'; // Import the comic.dart file, which includes the Chapter class
 import 'addComic.dart';
 import 'addChapter.dart';
 import 'login.dart';

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:komikplanet/comicDetail.dart';
-import 'Komik.dart';
-import 'booklish.dart';
+import 'komik.dart';
+import 'bookmark.dart';
 import 'search.dart';
 import 'setting.dart';
 import 'profile.dart';
-import 'notifications.dart';
+import 'rank.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -231,8 +231,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Bookmark',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.emoji_events),
+            label: 'Ranking',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -249,7 +249,7 @@ class _HomePageState extends State<HomePage> {
           if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NotificationsPage()),
+              MaterialPageRoute(builder: (context) => RankPage()),
             );
           } else if (index == 3) {
             User user = FirebaseAuth.instance.currentUser!;

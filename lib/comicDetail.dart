@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:komikplanet/chapterDetail.dart';
-import 'Komik.dart';
-import 'booklish.dart';
+import 'komik.dart';
+import 'bookmark.dart';
 
 class ComicDetailPage extends StatefulWidget {
   final Comic comic;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Komik.dart';
+import 'komik.dart';
 
 class AddChapterPage extends StatefulWidget {
   final List<Comic> comics;
