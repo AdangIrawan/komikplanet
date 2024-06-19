@@ -10,7 +10,6 @@ import 'setting.dart';
 import 'profile.dart';
 import 'notifications.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -30,8 +29,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchComics() async {
-    final snapshot = await FirebaseFirestore.instance.collection('List Komik').get();
-    final fetchedComics = snapshot.docs.map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    final snapshot =
+        await FirebaseFirestore.instance.collection('List Komik').get();
+    final fetchedComics = snapshot.docs
+        .map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
     setState(() {
       comics = fetchedComics;
       filteredComics = fetchedComics;
@@ -60,19 +62,35 @@ class _HomePageState extends State<HomePage> {
         'imagePath': 'assets/image/Tumbnail3.png',
         'text': 'Boku no Hero Academia'
       },
-      {
-        'imagePath': 'assets/image/Tumbnail2.png',
-        'text': 'SPY X FAMILY'
-      },
+      {'imagePath': 'assets/image/Tumbnail2.png', 'text': 'SPY X FAMILY'},
     ];
 
-    final List<String> categories = ['All', 'Action', 'Comedy', 'Drama', 'Fantasy', 'Romance'];
+    final List<String> categories = [
+      'All',
+      'Action',
+      'Comedy',
+      'Drama',
+      'Fantasy',
+      'Romance',
+      'Harem'
+    ];
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/image/KomikPlanetLogo.png'),
+        ),
+        title: Row(
+          children: [
+            Text(
+              'Planet Komik',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -172,7 +190,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 20),
               // Recommendations
               const Text(
-                'Rekomendasi',
+                'Komik Terbaru',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
@@ -183,7 +201,8 @@ class _HomePageState extends State<HomePage> {
                   : GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.6,
                         crossAxisSpacing: 10,
@@ -213,8 +232,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Bookmark',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.emoji_events),
+            label: 'Ranking',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -228,13 +247,12 @@ class _HomePageState extends State<HomePage> {
               MaterialPageRoute(builder: (context) => BookmarkPage()),
             );
           }
-           if (index == 2) {
+          if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NotificationsPage()),
+              MaterialPageRoute(builder: (context) => RankPage()),
             );
-          }
-           else if (index == 3) {
+          } else if (index == 3) {
             User user = FirebaseAuth.instance.currentUser!;
             Navigator.push(
               context,

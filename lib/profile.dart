@@ -9,6 +9,7 @@ import 'main.dart'; // Import your main.dart file where you initialize Firebase
 class ProfilePage extends StatelessWidget {
   final User user;
 
+
   const ProfilePage({Key? key, required this.user}) : super(key: key);
 
   Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData() {
@@ -51,8 +52,9 @@ class ProfilePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Profile'),
+            title: Text('Profile', style: TextStyle(color: Colors.white),),
             backgroundColor: Color.fromARGB(255, 11, 1, 35),
+            iconTheme: IconThemeData(color: Colors.white),
             actions: [
               IconButton(
                 icon: Icon(Icons.logout),
@@ -90,7 +92,20 @@ class ProfilePage extends StatelessWidget {
                   'User ID: ${user.uid}',
                   style: TextStyle(fontSize: 16),
                 ),
-                // Add more fields as needed
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // Functionality to change profile picture
+                      // Implement this according to your app requirements
+                    },
+                    icon: Icon(Icons.camera_alt),
+                    label: Text('Change Profile Picture'),
+                    style: ElevatedButton.styleFrom(
+                    shadowColor: Color.fromARGB(255, 11, 1, 35), // Background color
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -110,8 +125,8 @@ class ProfilePage extends StatelessWidget {
                 label: 'Bookmark',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: 'Notifications',
+                icon: Icon(Icons.emoji_events),
+                label: 'Ranking',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -135,7 +150,7 @@ class ProfilePage extends StatelessWidget {
                 // If the Notifications icon is clicked, navigate to NotificationsPage
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => RankPage()),
                 );
               }
               // Note: For index 3 (Profile), we stay on the ProfilePage

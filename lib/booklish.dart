@@ -17,8 +17,10 @@ class BookmarkPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bookmark'),
+        title: Text('Bookmark',style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Color.fromARGB(255, 11, 1, 35),
+         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: BookmarkedComicsList(userId: userId),
       bottomNavigationBar: BottomNavigationBar(
@@ -37,8 +39,8 @@ class BookmarkPage extends StatelessWidget {
             label: 'Bookmark',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.emoji_events),
+            label: 'Ranking',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -56,7 +58,7 @@ class BookmarkPage extends StatelessWidget {
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NotificationsPage()),
+              MaterialPageRoute(builder: (context) => RankPage()),
             );
           } else if (index == 3) {
             User user = FirebaseAuth.instance.currentUser!;
@@ -124,7 +126,18 @@ class BookmarkedComicsList extends StatelessWidget {
                     );
                   },
                   child: ListTile(
-                    leading: Image.asset(bookmarkedComics[index].imagePath), // Tambahkan gambar sebagai leading
+                    leading: Container(
+                      width: 50, // Atur lebar gambar
+                      height: 50, // Atur tinggi gambar
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: AssetImage(bookmarkedComics[index].imagePath),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+
                     title: Text(bookmarkedComics[index].title),
                     subtitle: Text(bookmarkedComics[index].genre),
                   ),

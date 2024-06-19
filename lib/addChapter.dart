@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Komik.dart';
 
@@ -16,13 +17,24 @@ class _AddChapterPageState extends State<AddChapterPage> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedComicId;
   final TextEditingController _chapterTitleController = TextEditingController();
-  final TextEditingController _imagesController = TextEditingController();
+  String? _pdfPath;
+
+  Future<void> _pickPdfFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+    if (result != null) {
+      setState(() {
+        _pdfPath = result.files.single.path;
+      });
+    } else {
+      // User canceled the picker
+    }
+  }
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState?.validate() ?? false) {
+    if (_formKey.currentState?.validate() ?? false && _pdfPath != null) {
       final newChapter = Chapter(
         title: _chapterTitleController.text,
-        images: _imagesController.text.split(',').map((image) => image.trim()).toList(),
+        pdfPath: _pdfPath!,
       );
 
       try {
@@ -38,7 +50,7 @@ class _AddChapterPageState extends State<AddChapterPage> {
 
         final newChapterData = {
           'title': newChapter.title,
-          'images': newChapter.images,
+          'pdfPath': newChapter.pdfPath,
         };
 
         existingChapters.add(newChapterData);
@@ -53,6 +65,10 @@ class _AddChapterPageState extends State<AddChapterPage> {
           content: Text('Failed to add chapter: $error'),
         ));
       }
+    } else if (_pdfPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please select a PDF file'),
+      ));
     }
   }
 
@@ -99,10 +115,9 @@ class _AddChapterPageState extends State<AddChapterPage> {
                 decoration: InputDecoration(labelText: 'Chapter Title'),
                 validator: (value) => value!.isEmpty ? 'Please enter a chapter title' : null,
               ),
-              TextFormField(
-                controller: _imagesController,
-                decoration: InputDecoration(labelText: 'Images (comma separated)'),
-                validator: (value) => value!.isEmpty ? 'Please enter images' : null,
+              ElevatedButton(
+                onPressed: _pickPdfFile,
+                child: Text(_pdfPath == null ? 'Select PDF File' : 'PDF Selected'),
               ),
               SizedBox(height: 20),
               ElevatedButton(
