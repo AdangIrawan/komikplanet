@@ -83,7 +83,8 @@ class LoginPage extends StatelessWidget {
               const Text(
                 'Login to your Account',
                 style: TextStyle(
-                  color: Colors.white,
+                  fontFamily: 'comic',
+                  color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -150,6 +151,7 @@ class LoginPage extends StatelessWidget {
                         'or continue with',
                         style: TextStyle(
                             color: Color.fromARGB(255, 194, 194, 194),
+                            fontFamily: 'comic',
                             fontSize: 14),
                       ),
                     ),
@@ -168,7 +170,10 @@ class LoginPage extends StatelessWidget {
                 children: <Widget>[
                   const Text(
                     "Don't have an account ? ",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'comic',
+                      ),  
                   ),
                   GestureDetector(
                     onTap: () {
@@ -181,6 +186,7 @@ class LoginPage extends StatelessWidget {
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(
+                        fontFamily: 'comic',
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
                   ),

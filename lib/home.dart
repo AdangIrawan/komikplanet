@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 20),
               // Recommendations
               const Text(
-                'Rekomendasi',
+                'Komik Terbaru',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
