@@ -1,20 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'home.dart'; // Import HomePage if not already imported
-import 'notifications.dart'; // Import NotificationsPage if not already imported
-import 'booklish.dart'; // Import BookmarkPage if not already imported
-import 'main.dart'; // Import your main.dart file where you initialize Firebase
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'home.dart';
+import 'notifications.dart';
+import 'booklish.dart';
+import 'main.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final User user;
-
 
   const ProfilePage({Key? key, required this.user}) : super(key: key);
 
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String? photoURL;
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await _getUserData();
+    if (snapshot.exists) {
+      setState(() {
+        photoURL = snapshot.data()?['photoURL'] ?? 'https://via.placeholder.com/150';
+      });
+    }
+  }
+
   Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData() {
-    // Fetch user data from Firestore
-    return FirebaseFirestore.instance.collection('account').doc(user.uid).get();
+    return FirebaseFirestore.instance.collection('account').doc(widget.user.uid).get();
   }
 
   Future<void> _signOut(BuildContext context) async {
@@ -22,12 +45,43 @@ class ProfilePage extends StatelessWidget {
       await FirebaseAuth.instance.signOut();
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MyApp()), // Replace MyApp with your initial app page
-        (route) => false, // Prevent user from navigating back
+        MaterialPageRoute(builder: (context) => MyApp()),
+        (route) => false,
       );
     } catch (e) {
       print('Error signing out: $e');
-      // Handle error signing out
+    }
+  }
+
+  Future<void> _changeProfilePicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      try {
+        // Upload to Firebase Storage
+        String fileName = 'profile_pictures/${widget.user.uid}.jpg';
+        await FirebaseStorage.instance.ref(fileName).putFile(imageFile);
+
+        // Get the download URL
+        String downloadURL = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+
+        // Update the user's photoURL in Firestore
+        await FirebaseFirestore.instance.collection('account').doc(widget.user.uid).update({
+          'photoURL': downloadURL,
+        });
+
+        // Update the user's profile in FirebaseAuth
+        await widget.user.updatePhotoURL(downloadURL);
+
+        setState(() {
+          // Update the photoURL to display the new profile picture
+          photoURL = downloadURL;
+        });
+      } catch (e) {
+        print('Error updating profile picture: $e');
+      }
     }
   }
 
@@ -46,19 +100,18 @@ class ProfilePage extends StatelessWidget {
           return Center(child: Text('User not found'));
         }
 
-        // Retrieve user data from snapshot
         Map<String, dynamic> userData = snapshot.data!.data()!;
         String username = userData['username'];
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Profile', style: TextStyle(color: Colors.white),),
+            title: Text('Profile', style: TextStyle(color: Colors.white)),
             backgroundColor: Color.fromARGB(255, 11, 1, 35),
             iconTheme: IconThemeData(color: Colors.white),
             actions: [
               IconButton(
                 icon: Icon(Icons.logout),
-                onPressed: () => _signOut(context), // Tambahkan tombol logout di sini
+                onPressed: () => _signOut(context),
               ),
             ],
           ),
@@ -68,41 +121,51 @@ class ProfilePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(user.photoURL ?? 'https://via.placeholder.com/150'),
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(photoURL!),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt, color: Colors.white),
+                          onPressed: _changeProfilePicture,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 20),
                 Center(
                   child: Text(
-                    username ?? 'No display name',
+                    username,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(height: 20),
                 Center(
                   child: Text(
-                    user.email ?? 'No email',
+                    widget.user.email ?? 'No email',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'User ID: ${user.uid}',
+                  'User ID: ${widget.user.uid}',
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      // Functionality to change profile picture
-                      // Implement this according to your app requirements
-                    },
+                    onPressed: _changeProfilePicture,
                     icon: Icon(Icons.camera_alt),
                     label: Text('Change Profile Picture'),
                     style: ElevatedButton.styleFrom(
-                    shadowColor: Color.fromARGB(255, 11, 1, 35), // Background color
+                      shadowColor: Color.fromARGB(255, 11, 1, 35),
                     ),
                   ),
                 ),
@@ -110,11 +173,11 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Color.fromARGB(255, 11, 1, 35), // color fix
-            unselectedItemColor: Colors.grey, // Set color for unselected items
-            selectedItemColor: Colors.white, // Set color for selected items
-            type: BottomNavigationBarType.fixed, // Ensure the background is applied to all items
-            currentIndex: 3, // Set the current index to indicate ProfilePage
+            backgroundColor: Color.fromARGB(255, 11, 1, 35),
+            unselectedItemColor: Colors.grey,
+            selectedItemColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: 3,
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
@@ -135,25 +198,21 @@ class ProfilePage extends StatelessWidget {
             ],
             onTap: (int index) {
               if (index == 0) {
-                // If the Home icon is clicked, navigate to HomePage
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
                 );
               } else if (index == 1) {
-                // If the Bookmark icon is clicked, navigate to BookmarkPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => BookmarkPage()),
                 );
               } else if (index == 2) {
-                // If the Notifications icon is clicked, navigate to NotificationsPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => RankPage()),
                 );
               }
-              // Note: For index 3 (Profile), we stay on the ProfilePage
             },
           ),
         );
