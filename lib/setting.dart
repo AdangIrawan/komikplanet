@@ -1,116 +1,98 @@
 import 'package:flutter/material.dart';
+import 'home.dart'; // Import HomePage if not already imported
+import 'notifications.dart'; // Import NotificationsPage if not already imported
+import 'booklish.dart'; // Import BookmarkPage if not already imported
+import 'tutorial_page.dart'; // Ensure the path is correct
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.black,
-      ),
-      home: SettingsPage(),
-    );
-  }
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
-class SettingsPage extends StatelessWidget {
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: Text(
+          'Settings',
+          style: TextStyle(color: Colors.white), // Change text color here
         ),
-        actions: [
-          Icon(Icons.settings),
-        ],
+        backgroundColor: Color.fromARGB(255, 11, 1, 35),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(16.0),
-                children: [
-                  SettingTile(icon: Icons.person, title: 'Account Settings'),
-                  SettingTile(icon: Icons.notifications, title: 'Notification'),
-                  SettingTile(icon: Icons.payment, title: 'Payment'),
-                  SettingTile(icon: Icons.book, title: 'BoksLish'),
-                  SettingTile(icon: Icons.create, title: 'Creator'),
-                  SettingTile(icon: Icons.lock, title: 'Change password'),
-                  SettingTile(
-                      icon: Icons.delete,
-                      title: 'Delete Account',
-                      isDelete: true),
-                ],
-              ),
+        child: Container(
+          color: Colors.white, // Set the background color to black
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(
+                  255, 0, 0, 0), // Set button color to match background
+              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
-            LogoutButton(),
-          ],
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TutorialPage()),
+              );
+            },
+            icon: Icon(Icons.menu_book,
+                size: 40, color: Colors.white), // Increase icon size
+            label: Text(
+              'Tutorial Membaca',
+              style: TextStyle(
+                  fontSize: 24, color: Colors.white), // Increase text size
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35), // color fix
+        unselectedItemColor: Colors.grey, // Set color for unselected items
+        selectedItemColor: Colors.white, // Set color for selected items
+        type: BottomNavigationBarType
+            .fixed, // Ensure the background is applied to all items
+        currentIndex: 3, // Set the current index to indicate ProfilePage
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Bookmark',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.emoji_events),
+            label: 'Ranking',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class SettingTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final bool isDelete;
-
-  SettingTile({required this.icon, required this.title, this.isDelete = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 4.0),
-      decoration: BoxDecoration(
-        color: isDelete ? Colors.red : Colors.blueGrey,
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.white),
-        title: Text(title, style: TextStyle(color: Colors.white)),
-        trailing: Icon(Icons.arrow_forward, color: Colors.white),
-        onTap: () {
-          // Handle tap event
+        onTap: (int index) {
+          if (index == 0) {
+            // If the Home icon is clicked, navigate to HomePage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else if (index == 1) {
+            // If the Bookmark icon is clicked, navigate to BookmarkPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BookmarkPage()),
+            );
+          } else if (index == 2) {
+            // If the Notifications icon is clicked, navigate to NotificationsPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RankPage()),
+            );
+          }
+          // Note: For index 3 (Profile), we stay on the ProfilePage
         },
-      ),
-    );
-  }
-}
-
-class LogoutButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 16.0),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          // Handle logout
-        },
-        icon: Icon(Icons.logout, color: Colors.red),
-        label: Text('Logout', style: TextStyle(color: Colors.red)),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.red,
-          backgroundColor: Colors.white,
-          side: BorderSide(color: Colors.red),
-        ),
       ),
     );
   }

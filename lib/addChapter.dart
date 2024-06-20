@@ -20,7 +20,8 @@ class _AddChapterPageState extends State<AddChapterPage> {
   String? _pdfPath;
 
   Future<void> _pickPdfFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
     if (result != null) {
       setState(() {
         _pdfPath = result.files.single.path;
@@ -38,15 +39,19 @@ class _AddChapterPageState extends State<AddChapterPage> {
       );
 
       try {
-        final selectedComicRef = FirebaseFirestore.instance.collection('List Komik').doc(_selectedComicId);
+        final selectedComicRef = FirebaseFirestore.instance
+            .collection('List Komik')
+            .doc(_selectedComicId);
 
         final selectedComicSnapshot = await selectedComicRef.get();
         if (!selectedComicSnapshot.exists) {
           throw Exception('Selected comic does not exist');
         }
 
-        final selectedComicData = selectedComicSnapshot.data() as Map<String, dynamic>;
-        final existingChapters = (selectedComicData['chapters'] ?? []) as List<dynamic>;
+        final selectedComicData =
+            selectedComicSnapshot.data() as Map<String, dynamic>;
+        final existingChapters =
+            (selectedComicData['chapters'] ?? []) as List<dynamic>;
 
         final newChapterData = {
           'title': newChapter.title,
@@ -86,7 +91,9 @@ class _AddChapterPageState extends State<AddChapterPage> {
           child: ListView(
             children: [
               StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('List Komik').snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('List Komik')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return CircularProgressIndicator();
@@ -106,18 +113,21 @@ class _AddChapterPageState extends State<AddChapterPage> {
                         _selectedComicId = value;
                       });
                     },
-                    validator: (value) => value == null ? 'Please select a comic' : null,
+                    validator: (value) =>
+                        value == null ? 'Please select a comic' : null,
                   );
                 },
               ),
               TextFormField(
                 controller: _chapterTitleController,
                 decoration: InputDecoration(labelText: 'Chapter Title'),
-                validator: (value) => value!.isEmpty ? 'Please enter a chapter title' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a chapter title' : null,
               ),
               ElevatedButton(
                 onPressed: _pickPdfFile,
-                child: Text(_pdfPath == null ? 'Select PDF File' : 'PDF Selected'),
+                child:
+                    Text(_pdfPath == null ? 'Select PDF File' : 'PDF Selected'),
               ),
               SizedBox(height: 20),
               ElevatedButton(
