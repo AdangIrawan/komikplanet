@@ -15,7 +15,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Tutorial',
           style: TextStyle(color: Colors.white), // Change text color here
         ),
         backgroundColor: Color.fromARGB(255, 11, 1, 35),
