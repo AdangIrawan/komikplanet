@@ -9,6 +9,7 @@ import 'main.dart'; // Import your main.dart file where you initialize Firebase
 class ProfilePage extends StatelessWidget {
   final User user;
 
+
   const ProfilePage({Key? key, required this.user}) : super(key: key);
 
   Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData() {
@@ -91,7 +92,20 @@ class ProfilePage extends StatelessWidget {
                   'User ID: ${user.uid}',
                   style: TextStyle(fontSize: 16),
                 ),
-                // Add more fields as needed
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // Functionality to change profile picture
+                      // Implement this according to your app requirements
+                    },
+                    icon: Icon(Icons.camera_alt),
+                    label: Text('Change Profile Picture'),
+                    style: ElevatedButton.styleFrom(
+                    shadowColor: Color.fromARGB(255, 11, 1, 35), // Background color
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

@@ -22,39 +22,32 @@ class _AddComicPageState extends State<AddComicPage> {
   final TextEditingController _statusController = TextEditingController();
 
   void _submitForm() {
-    if (_formKey.currentState?.validate() ?? false) {
-      final newComic = Comic(
-        id: DateTime.now().millisecondsSinceEpoch.toString(), // Gunakan Timestamp sebagai ID
-        title: _titleController.text,
-        genre: _genreController.text,
-        rating: double.parse(_ratingController.text),
-        imagePath: _imagePathController.text,
-        description: _descriptionController.text,
-        synopsis: _synopsisController.text,
-        status: _statusController.text,
-        chapters: [],
-      );
+  if (_formKey.currentState?.validate() ?? false) {
+    final newComic = Comic(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: _titleController.text,
+      genre: _genreController.text,
+      rating: double.parse(_ratingController.text),
+      imagePath: _imagePathController.text,
+      description: _descriptionController.text,
+      synopsis: _synopsisController.text,
+      status: _statusController.text,
+      chapters: [],
+      timestamp: DateTime.now(), // Add the current time as timestamp
+    );
 
-      // Add to Firestore
-      FirebaseFirestore.instance.collection('List Komik').add({
-        'id': newComic.id, // Simpan ID juga di Firestore
-        'title': newComic.title,
-        'genre': newComic.genre,
-        'rating': newComic.rating,
-        'imagePath': newComic.imagePath,
-        'description': newComic.description,
-        'synopsis': newComic.synopsis,
-        'status': newComic.status,
-        'chapters': newComic.chapters.map((chapter) => chapter.toMap()).toList(),
-      }).then((_) {
-        widget.onAddComic(newComic);
-        Navigator.pop(context);
-      }).catchError((error) {
-        print('Failed to add comic: $error');
-        // Handle error, e.g., show a Snackbar or dialog
-      });
-    }
+    // Add to Firestore
+    FirebaseFirestore.instance.collection('List Komik').add(newComic.toMap())
+        .then((_) {
+      widget.onAddComic(newComic);
+      Navigator.pop(context);
+    }).catchError((error) {
+      print('Failed to add comic: $error');
+      // Handle error, e.g., show a Snackbar or dialog
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

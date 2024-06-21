@@ -71,6 +71,7 @@ class SignUpPage extends StatelessWidget {
               const Text(
                 'Create your Account',
                 style: TextStyle(
+                  fontFamily: 'comic',
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -149,6 +150,7 @@ class SignUpPage extends StatelessWidget {
                       child: Text(
                         'or continue with',
                         style: TextStyle(
+                            fontFamily: 'comic',
                             color: Color.fromARGB(255, 194, 194, 194),
                             fontSize: 14),
                       ),
@@ -168,7 +170,9 @@ class SignUpPage extends StatelessWidget {
                 children: <Widget>[
                   const Text(
                     "Have Account ? ",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      fontFamily: 'comic',
+                      color: Colors.white),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -177,6 +181,7 @@ class SignUpPage extends StatelessWidget {
                     child: const Text(
                       'Login',
                       style: TextStyle(
+                        fontFamily: 'comic',
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -187,12 +192,14 @@ class SignUpPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 text: const TextSpan(
                   style: TextStyle(
+                    fontFamily: 'comic',
                       color: Color.fromARGB(255, 194, 194, 194), fontSize: 12),
                   children: [
                     TextSpan(text: 'By clicking continue, you agree to our '),
                     TextSpan(
                       text: 'Terms of Service ',
                       style: TextStyle(
+                          fontFamily: 'comic',
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontWeight: FontWeight.bold),
                     ),
