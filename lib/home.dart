@@ -29,7 +29,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchComics() async {
-    final snapshot = await FirebaseFirestore.instance.collection('List Komik').orderBy('timestamp', descending: true).get();
+    final snapshot =
+        await FirebaseFirestore.instance.collection('List Komik').orderBy('timestamp', descending: true).get();
     final fetchedComics = snapshot.docs
         .map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
@@ -298,8 +299,6 @@ class ComicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isNew = DateTime.now().difference(comic.timestamp).inMinutes <= 5;
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -311,70 +310,43 @@ class ComicCard extends StatelessWidget {
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                    image: DecorationImage(
-                      image: AssetImage(comic.imagePath),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    comic.title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(comic.genre),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Rating: ${comic.rating}'),
-                ),
-              ],
-            ),
-            if (isNew)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                    ),
-                  ),
-                  child: Text(
-                    'New',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            Container(
+              height: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                image: DecorationImage(
+                  image: AssetImage(comic.imagePath),
+                  fit: BoxFit.cover,
                 ),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                comic.title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(comic.genre),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Rating: ${comic.rating}'),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
 
 void main() {
   runApp(MaterialApp(
