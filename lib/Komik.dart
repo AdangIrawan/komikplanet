@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 class Comic {
   final String id;
   final String title;
@@ -8,6 +11,7 @@ class Comic {
   final String synopsis;
   final String status;
   final List<Chapter> chapters;
+  final DateTime timestamp; // New field
 
   const Comic({
     required this.id,
@@ -19,6 +23,7 @@ class Comic {
     required this.synopsis,
     required this.status,
     required this.chapters,
+    required this.timestamp, // Initialize the new field
   });
 
   factory Comic.fromMap(Map<String, dynamic> map) {
@@ -34,6 +39,9 @@ class Comic {
       chapters: List<Chapter>.from(
         (map['chapters'] ?? []).map((item) => Chapter.fromMap(item)),
       ),
+      timestamp: map['timestamp'] != null 
+          ? (map['timestamp'] as Timestamp).toDate() 
+          : DateTime.now(), // Use the current date and time as a fallback
     );
   }
 
@@ -48,9 +56,11 @@ class Comic {
       'synopsis': synopsis,
       'status': status,
       'chapters': chapters.map((chapter) => chapter.toMap()).toList(),
+      'timestamp': Timestamp.fromDate(timestamp), // Convert DateTime to Timestamp
     };
   }
 }
+
 
 class Chapter {
   final String title;

@@ -21,6 +21,8 @@ class _HomePageState extends State<HomePage> {
   List<Comic> comics = [];
   List<Comic> filteredComics = [];
   String selectedGenre = '';
+  int currentPage = 0;
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -29,8 +31,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchComics() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('List Komik').get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('List Komik')
+        .orderBy('timestamp', descending: true)
+        .get();
     final fetchedComics = snapshot.docs
         .map((doc) => Comic.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
@@ -194,25 +198,94 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              filteredComics.isEmpty
-                  ? Center(
-                      child: Text('No comics found for selected genre.'),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.6,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+              if (filteredComics.isEmpty)
+                Center(
+                  child: Text('No comics found for selected genre.'),
+                )
+              else
+                Column(
+                  children: [
+                    // Comic Cards with Pagination
+                    SizedBox(
+                      height: 300, // Adjust height based on your need
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (int index) {
+                          setState(() {
+                            currentPage = index;
+                          });
+                        },
+                        itemCount: (filteredComics.length / 6).ceil(),
+                        itemBuilder: (BuildContext context, int pageIndex) {
+                          final int startIndex = pageIndex * 6;
+                          final int endIndex =
+                              (pageIndex + 1) * 6 < filteredComics.length
+                                  ? (pageIndex + 1) * 6
+                                  : filteredComics.length;
+
+                          final List<Comic> comicsToShow =
+                              filteredComics.sublist(startIndex, endIndex);
+
+                          return GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.6,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemCount: comicsToShow.length,
+                            itemBuilder: (context, index) {
+                              return ComicCard(comic: comicsToShow[index]);
+                            },
+                          );
+                        },
                       ),
-                      itemCount: filteredComics.length,
-                      itemBuilder: (context, index) {
-                        return ComicCard(comic: filteredComics[index]);
-                      },
                     ),
+                    // Pagination Buttons
+                    // Pagination Buttons
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 1.0), // Add top padding here
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 20.0), // Tambahkan padding ke kanan
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: currentPage == 0
+                                  ? null
+                                  : () {
+                                      _pageController.previousPage(
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20.0), // Tambahkan padding ke kiri
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_forward_ios),
+                              onPressed: currentPage ==
+                                      (filteredComics.length / 6).ceil() - 1
+                                  ? null
+                                  : () {
+                                      _pageController.nextPage(
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
             ],
           ),
         ),
@@ -297,6 +370,20 @@ class ComicCard extends StatelessWidget {
 
   const ComicCard({required this.comic});
 
+  bool isNewComic() {
+    // Ubah durasi menjadi 5 menit (300 detik)
+    final fiveMinutesInMillis = 300 * 1000;
+
+    // Timestamp komik
+    final comicTimestamp = comic.timestamp.millisecondsSinceEpoch;
+
+    // Timestamp sekarang
+    final nowTimestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Cek apakah komik masih baru (dibawah 5 menit)
+    return (nowTimestamp - comicTimestamp) < fiveMinutesInMillis;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -310,37 +397,62 @@ class ComicCard extends StatelessWidget {
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Container(
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                image: DecorationImage(
-                  image: AssetImage(comic.imagePath),
-                  fit: BoxFit.cover,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(10)),
+                    image: DecorationImage(
+                      image: AssetImage(comic.imagePath),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    comic.title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(comic.genre),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Rating: ${comic.rating}'),
+                ),
+              ],
+            ),
+            if (isNewComic()) // Menampilkan label "New" jika komik masih baru
+              Positioned(
+                top: 5,
+                right: 5,
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Text(
+                    'NEW',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                comic.title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(comic.genre),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Rating: ${comic.rating}'),
-            ),
           ],
         ),
       ),
