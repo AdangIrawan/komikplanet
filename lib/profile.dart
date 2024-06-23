@@ -53,38 +53,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> _changeProfilePicture() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-      try {
-        // Upload to Firebase Storage
-        String fileName = 'profile_pictures/${widget.user.uid}.jpg';
-        await FirebaseStorage.instance.ref(fileName).putFile(imageFile);
-
-        // Get the download URL
-        String downloadURL = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
-
-        // Update the user's photoURL in Firestore
-        await FirebaseFirestore.instance.collection('account').doc(widget.user.uid).update({
-          'photoURL': downloadURL,
-        });
-
-        // Update the user's profile in FirebaseAuth
-        await widget.user.updatePhotoURL(downloadURL);
-
-        setState(() {
-          // Update the photoURL to display the new profile picture
-          photoURL = downloadURL;
-        });
-      } catch (e) {
-        print('Error updating profile picture: $e');
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -127,15 +95,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         radius: 50,
                         backgroundImage: NetworkImage(photoURL!),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: IconButton(
-                          icon: Icon(Icons.camera_alt, color: Colors.white),
-                          onPressed: _changeProfilePicture,
-                          color: Colors.blue,
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -156,19 +115,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 20),
                 Text(
                   'User ID: ${widget.user.uid}',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, ),
                 ),
                 SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: _changeProfilePicture,
-                    icon: Icon(Icons.camera_alt),
-                    label: Text('Change Profile Picture'),
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Color.fromARGB(255, 11, 1, 35),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
