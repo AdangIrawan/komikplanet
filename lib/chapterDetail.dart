@@ -18,7 +18,7 @@ class ChapterDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('$chapter - $title',style: TextStyle(color: Colors.white),),
-        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35),
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: PDF().cachedFromUrl(
