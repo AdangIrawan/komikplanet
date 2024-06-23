@@ -52,8 +52,9 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.comic.title),
-        backgroundColor: Color.fromARGB(255, 17, 0, 58),
+        title: Text(widget.comic.title, style: TextStyle(color: Colors.white),),
+        backgroundColor: Color.fromARGB(255, 11, 1, 35),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
