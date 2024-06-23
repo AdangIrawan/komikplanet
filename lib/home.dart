@@ -76,7 +76,11 @@ class _HomePageState extends State<HomePage> {
       'Drama',
       'Fantasy',
       'Romance',
-      'Harem'
+      'Harem',
+      'Slice of Life',
+      'Horror',
+      'Shounen'
+
     ];
 
     return Scaffold(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Komik.dart'; // Import the comic.dart file, which includes the Chapter class
 import 'addComic.dart';
-import 'addChapter.dart';
 import 'login.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -89,20 +88,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 );
               },
               child: Text('Add Comic'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddChapterPage(
-                        comics: _comics, // Gunakan variabel _comics di sini
-                        onAddChapter: _addChapter),
-                  ),
-                );
-              },
-              child: Text('Add Chapter'),
             ),
             FutureBuilder<List<Comic>>(
               future: _comicsFuture,
