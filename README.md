@@ -1,6 +1,11 @@
 # komikplanet
 
-A new Flutter project.
+Nama Member :
+1. Asrul Alif - 535220172
+2. Amos Valentino - 535220191
+3. Adang Irawan - 535220192
+4. Lufika Ayu - 535220223
+5. Gerry Dominiki - 535220225
 
 ## Getting Started
 
